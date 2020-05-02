@@ -5,6 +5,8 @@ const compression = require('compression');
 const cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const csurf = require("csurf");
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 app.use(helmet());
 app.use(express.json());
@@ -17,9 +19,6 @@ const cookieSessionMiddleware = cookieSession({
 });
 app.use( cookieSessionMiddleware);
 
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
-
 io.use(function(socket, next) {
     cookieSessionMiddleware(socket.request, socket.request.res, next);
 });
@@ -31,10 +30,15 @@ app.use(function(req, res, next){
     next();
 });
 
+io.on("connection", function(socket){        
+    console.log(socket.id);
 
-app.get("/sendemail", (request, response)=>
-    response.send("Hallo")
-);
-
+    socket.on("chatMessage", data => {       
+        
+        io.sockets.emit("chatMessage",{
+            data
+        });
+    });
+});
 
 server.listen(process.env.PORT || 8080);

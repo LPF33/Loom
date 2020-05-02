@@ -1,0 +1,171 @@
+export default function canvas(canvas){
+
+    if(!canvas){
+        return;
+    }    
+           
+    const ctx = canvas.getContext("2d");
+    ctx.canvas.width = window.innerWidth/2;
+    ctx.canvas.height = window.innerHeight/2;
+    
+    /*const socket = io.connect();
+    const pencil = document.querySelector("#pencil");
+    const rectangle = document.querySelector("#rectangle");
+    const circle = document.querySelector("#circle");
+    const clear = document.querySelector("#clear");
+    const rubber = document.querySelector("#rubber");
+
+    //Change Color
+    let color = "black";
+    const colorButtons = document.querySelectorAll(".color");
+    const changeColor = e => {
+        color = e.target.attributes[1].value;
+    }
+    colorButtons.forEach(item=> {
+        item.addEventListener("click", changeColor);
+    })    
+
+    //Clear canvas
+    clear.addEventListener("click", () => {
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);        
+        socket.emit("clear");
+    })    
+
+    //Paint
+    let painting = false;
+    let rectanglePaint = false;
+    let startPointX;
+    let startPointY;
+
+    const paintStart = e => {
+        painting = true;
+        startPointX = e.offsetX;
+        startPointY = e.offsetY;        
+    };
+
+    const paintEnd = () => {
+        painting = false;
+        rectanglePaint = false;
+    };
+    
+    //rubber
+    const erase = e => {
+        canvas.removeEventListener("mousemove", drawCircle);
+        canvas.removeEventListener("mousemove", drawRectangle); 
+        canvas.removeEventListener("mousemove", drawPencil);
+
+        if(painting){
+            startPointX = e.offsetX;
+            startPointY = e.offsetY;
+            ctx.beginPath();
+            ctx.strokeStyle = "white";
+            ctx.fillStyle = "white";
+            ctx.arc(startPointX, startPointY, 10, 0, Math.PI*2, false);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();            
+        }
+        canvas.removeEventListener("mousemove", erase); 
+        canvas.addEventListener("mousemove", erase);        
+    };
+
+    //Paint with a pencil, paint a stroke
+    const drawPencil = e => {    
+        canvas.removeEventListener("mousemove", drawCircle);
+        canvas.removeEventListener("mousemove", drawRectangle); 
+        canvas.removeEventListener("mousemove", erase);
+        if(painting){            
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.moveTo(startPointX,startPointY);
+            ctx.lineTo(e.offsetX,e.offsetY);            
+            ctx.stroke(); 
+            ctx.closePath();   
+            startPointX = e.offsetX;
+            startPointY = e.offsetY;
+            
+            //Emit data
+            socket.emit("painting", {
+                painting: canvas.toDataURL()
+            });
+        }
+        canvas.removeEventListener("mousemove", drawPencil);
+        canvas.addEventListener("mousemove", drawPencil);        
+    };
+
+    let rectangleEndX;
+    let rectangleEndY;    
+
+    //draw a rectangle
+    const drawRectangle = e => {
+        canvas.removeEventListener("mousemove", drawCircle);
+        canvas.removeEventListener("mousemove", drawPencil);       
+        canvas.removeEventListener("mousemove", erase);
+        if(rectanglePaint){          
+            ctx.clearRect(startPointX,startPointY,rectangleEndX,rectangleEndY);
+        }
+        if(painting){      
+            rectanglePaint = true;             
+            ctx.strokeStyle = color;
+            rectangleEndX = e.offsetX-startPointX;
+            rectangleEndY = e.offsetY-startPointY;
+            ctx.strokeRect(startPointX,startPointY,rectangleEndX,rectangleEndY);            
+            
+            //Emit data
+            socket.emit("painting", {
+                painting: canvas.toDataURL()
+            });
+        }
+        canvas.removeEventListener("mousemove", drawRectangle);
+        canvas.addEventListener("mousemove", drawRectangle);     
+    }
+
+    //Draw a circle
+    const drawCircle = e => {
+        canvas.removeEventListener("mousemove", drawRectangle); 
+        canvas.removeEventListener("mousemove", drawPencil);       
+        canvas.removeEventListener("mousemove", erase);
+
+        if(painting){ 
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            let circleX = Math.pow(e.offsetX-startPointX,2);
+            let circleY = Math.pow(e.offsetY-startPointY,2);
+            let line = Math.sqrt(circleX+circleY); 
+            ctx.arc(startPointX, startPointY, line, 0, Math.PI*2, false);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            
+            //Emit data
+            socket.emit("painting", {
+                painting: canvas.toDataURL()
+            });
+        }
+        canvas.removeEventListener("mousemove", drawCircle);
+        canvas.addEventListener("mousemove", drawCircle);
+    }
+
+    socket.on("painting", data => {
+        let image = new Image();
+        let imageSrc = data.painting;
+        image.onload = function(){
+            ctx.drawImage(image,0,0);
+        }
+        image.src = imageSrc;        
+    });
+
+    socket.on("clear", data => {
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);         
+    });
+
+    pencil.addEventListener("click", drawPencil);
+    rectangle.addEventListener("click", drawRectangle);
+    circle.addEventListener("click", drawCircle);
+    rubber.addEventListener("click", erase);
+
+    canvas.addEventListener("mousedown", paintStart);
+    canvas.addEventListener("mouseup", paintEnd);
+ */
+}

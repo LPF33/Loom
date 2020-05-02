@@ -9,7 +9,7 @@
     const ctx = canvas.getContext("2d");
 
     const pointQuantity = 500;
-    const allPointsArray = [];
+    let allPointsArray = [];
 
     class Points {
         constructor(X,Y,r,color){
@@ -24,9 +24,9 @@
             const value = random === 1 ? true : false;
             ctx.beginPath();
             if(value){
-                var red = Math.round(Math.random()*255);
-                var green = Math.round(Math.random()*255);
-                var blue = Math.round(Math.random()*255);
+                const red = Math.round(Math.random()*255);
+                const green = Math.round(Math.random()*255);
+                const blue = Math.round(Math.random()*255);
                 this.color = `rgb(${red},${green},${blue})`;
             }
             const radius = Math.floor(Math.random()*6);
@@ -64,18 +64,27 @@
             ctx.closePath();
         }
 
-        eraseOldMouse(x,y){
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.arc(x,y,this.radius,0,2*Math.PI);
-            ctx.fill();
-            ctx.closePath();
-        }
-
         drawCanvas(){
             ctx.clearRect(0,0,canvas.width,canvas.height);
             for( let point of allPointsArray){
                 point.drawAgainPoint();
+            }
+        }
+
+        connect(){    
+            for ( let i = 0; i<pointQuantity; i++){
+                const distance_2 = Math.pow(this.x-allPointsArray[i].x,2)+Math.pow(this.y-allPointsArray[i].y,2);
+                const distance = Math.sqrt(distance_2);
+                if(distance < 70){
+                    ctx.beginPath;
+                    ctx.strokeStyle = allPointsArray[i].color;
+                    ctx.lineWidth = 3;
+                    ctx.lineCap = "round";
+                    ctx.moveTo(allPointsArray[i].x, allPointsArray[i].y);
+                    ctx.lineTo(allPointsArray[i].x - (allPointsArray[i].x - this.x )*0.4,allPointsArray[i].y - (allPointsArray[i].y - this.y)*0.4);
+                    ctx.stroke();
+                    ctx.closePath();
+                }
             }
         }
     }
@@ -90,6 +99,7 @@
     };
 
     const resizeCanvas = () => {
+        allPointsArray = [];
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
         createWindow();
@@ -104,8 +114,9 @@
         stars.positionPoint();
         stars.drawPoint();
         allPointsArray.push(stars);
-        const mousePointer = new Mouse(mouseX,mouseY,20,"white");
-        mousePointer.drawCanvas();
+        const mousePointer = new Mouse(mouseX,mouseY,15,"white");
+        mousePointer.drawCanvas();        
+        mousePointer.connect();
         mousePointer.drawMouse();
     });
     
