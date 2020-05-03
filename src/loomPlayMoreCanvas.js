@@ -5,8 +5,7 @@ export default function canvas(canvas){
     let sinusCurve = [];
     let imageSrc =  "/logowhite.png";
     let imageSrcYellow = "/logoyellow.png";
-    let animationID;
-    let animationID2;
+    let timeoutId;
 
     const drawPicture = () => {
         let image = new Image();
@@ -34,7 +33,7 @@ export default function canvas(canvas){
         ctx.closePath();
         ballX += 2;
         if(ballX<=canvas.width-canvas.width/12){
-            animationID = requestAnimationFrame(shootBall);
+            requestAnimationFrame(shootBall);
         } else {
             ctx.clearRect(canvas.width*(9/10)-5,0,canvas.width/10+5,canvas.height);
             let image = new Image();
@@ -42,7 +41,7 @@ export default function canvas(canvas){
                 ctx.drawImage(image,canvas.width-canvas.width/10,canvas.height/2-0.5*canvas.width/7,canvas.width/10,canvas.width/7);
             };
             image.src = imageSrcYellow;  
-            setTimeout(resizeCanvas,3000);
+            timeoutId = setTimeout(resizeCanvas,3000);
         }
     };
 
@@ -58,7 +57,7 @@ export default function canvas(canvas){
         x += 1;  
 
         if(x<=canvas.width-canvas.width/10){
-            animationID2 = requestAnimationFrame(drawBall);
+            requestAnimationFrame(drawBall);
         } else {
             ballX = ctx.canvas.width/10+5;
             shootBall();
@@ -68,8 +67,7 @@ export default function canvas(canvas){
     
     const resizeCanvas = () => {  
         sinusCurve = [];      
-        cancelAnimationFrame(animationID);
-        cancelAnimationFrame(animationID2);
+        clearTimeout(timeoutId);
         ctx.canvas.width=window.innerWidth*0.4;
         ctx.canvas.height=window.innerHeight/3; 
         x = ctx.canvas.width/10;       

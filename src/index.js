@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import {init} from "./sockets.js";
 import './index.css';
@@ -9,7 +9,8 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import reduxPromise from "redux-promise";
-import reducer from "./reducers.js";	
+import reducer from "./reducers.js";
+import axios from "./axios.js";	
 const store = createStore(
     reducer,
     composeWithDevTools(applyMiddleware(reduxPromise))
@@ -17,11 +18,12 @@ const store = createStore(
 
 init(store); 
 
-//const serverUrl = "localhost:8080";
+const serverUrl = "http://localhost:8080";
+const mainUrl = "http://localhost:3000";
 
 function FriendEmail(props){
 
-    const {email,index, onChange} = props;
+    let {email,index, onChange} = props;
         
     return (
         <div className="flex">
@@ -34,18 +36,69 @@ function Welcome(){
     let [friendsCount, setFriendsCount] = useState(2);
     let [firstname, setFirstName] = useState("");
     let [lastname, setLastName] = useState("");
+    let [mainEmail, setMainEmail] = useState("");
+    let [friendEmail, setFriendEmail] = useState("");
 
     let [emails, setEmails] = useState(["",""]); 
+    let [link1, setLink1] = useState("");
+    let [link2, setLink2] = useState("");
+    let [code, setCode] = useState(["",""]);
 
-    const canvasRef = useRef(); 
+    let [statusChat,setStatusChat] = useState(1);
+    let [error, setError] = useState("");
 
+    let [statusBattleship,setStatusBattleship] = useState(1);
+    let [error2, setError2] = useState("");
+    
     useEffect(() => {
-        const canvas = canvasRef.current;
-        loomPlayMoreCanvas(canvas);
-    });
+        (async() => {
+            const code = await axios.get(`${serverUrl}/randomCode`);
+            const code2 = await axios.get(`${serverUrl}/randomCode`); 
+            setLink1(`${mainUrl}/loomchat/${code.data.secretCode}`);
+            setLink2(`${mainUrl}/loomactica/${code2.data.secretCode}`);
+            setCode([code.data.secretCode,code2.data.secretCode]);
+        })();
+    }, []);
+
+    const sendChatMail = async () => {
+        const send = await axios.post(`${serverUrl}/invitationChat`, {firstname, lastname, mainEmail, emails, link1});
+        if(send.data.success){
+            setStatusChat(2);
+        } else {
+            if(send.data.empty){
+                setStatusChat(4);
+            } else {
+                setError(send.data.error);
+                setStatusChat(3);
+            }            
+        }
+    };
+
+    const sendBattleshipMail = async () => {
+        const send = await axios.post(`${serverUrl}/invitationBattleship`, {firstname, mainEmail, friendEmail, link2});
+        if(send.data.success){
+            setStatusBattleship(2);
+        } else {
+            if(send.data.empty){
+                setStatusBattleship(4);
+            } else {
+                setError2(send.data.error);
+                setStatusBattleship(3);
+            }            
+        }
+    };
+
+    const changeRouting = async() => {
+        await axios.post(`${serverUrl}/startLoomChat`, {firstname,lastname,room:code[0]});
+        window.location.replace(`/loomChat/${code[0]}`);
+    };
+    const changeRoutingPlay = async() => {
+        await axios.post(`${serverUrl}/startLoomactica`, {firstname,lastname,room:code[1]});
+        window.location.replace(`/loomactica/${code[1]}`);
+    };
   
     return(        
-        <div> 
+        <div>            
             <div id="header">LOOM</div>   
             <div id="loomChat">
                 <div>
@@ -55,18 +108,47 @@ function Welcome(){
                         <input type="text" id="firstname" name="firstname" placeholder="Your firstname" value={firstname} onChange={e => setFirstName(e.target.value)}/> 
                         <input type="text" id="lastname" name="lastname" placeholder="Your lastname" value={lastname} onChange={e => setLastName(e.target.value)}/>   
                     </div>
-                    <input type="email" id="email" name="email" placeholder="Your email address" />
-                </div>                
+                    <input type="email" id="email" name="email" placeholder="Your email address"  value={mainEmail} onChange={e => setMainEmail(e.target.value)}/>
+                </div>  
+                {statusChat===1 &&             
                 <div>
-                    <h1>Invite <button className="welcomeButton" type="button" onClick={() => { if(friendsCount>1){setFriendsCount(--friendsCount); emails.splice(0,1); setEmails(emails);}}} >-</button>{friendsCount}<button className="welcomeButton" type="button" onClick={() => {if(friendsCount<6){setFriendsCount(++friendsCount);setEmails([...emails,""]);} }}>+</button> friends</h1>
+                    {statusChat!==2 &&
+                    <div className="flex">
+                        <h2>Send this link to your friends:</h2>
+                        <div className="battleshipLink">{link1}</div>                        
+                        <button className="welcomeButton2" type="button" onClick={changeRouting}>Start</button>
+                    </div>  
+                    }                  
+                    <h1>OR Invite <button className="welcomeButton" type="button" onClick={() => { if(friendsCount>1){setFriendsCount(--friendsCount); emails.splice(0,1); setEmails(emails);}}} >-</button>{friendsCount}<button className="welcomeButton" type="button" onClick={() => {if(friendsCount<6){setFriendsCount(++friendsCount);setEmails([...emails,""]);} }}>+</button> friends</h1>
                     <h2>Please, insert the email addresses of your friends!</h2>
                     <div id="friendGrid" > {emails.map((email, index) => 
                         <FriendEmail email={email} index={index} key={index} onChange={e => {let em= [...emails]; em[index] = e.target.value; setEmails(em);}}/>
                     )}
                     </div>
-                    <input type="submit" value="Invite &amp; Start"></input>
+                    <input type="submit" value="Invite" onClick={sendChatMail}></input>
                 </div>
-                
+                } 
+                {statusChat===2 &&
+                <div>
+                    <h1>All invitations were sent successfully!</h1>
+                    <h2>You can now enter the chat room!</h2>
+                    <button className="welcomeButton2" type="button" onClick={changeRouting}>Start</button>
+                </div>
+                }
+                {statusChat===3 &&
+                <div>
+                    <h1>A problem occured</h1>
+                    <div className="mailError">{error}</div>
+                    <button type="button" onClick={()=> setStatusChat(1)} className="welcomeButton2">Go back</button>
+                </div>
+                }
+                {statusChat===4 &&
+                <div>
+                    <h1>Please fill out all fields!</h1>
+                    <h2>Please go back and try again!</h2>
+                    <button type="button" onClick={()=> setStatusChat(1)} className="welcomeButton2">Go back</button>
+                </div>
+                }
             </div>   
             <div id="loomBattleship">
                 <div>
@@ -74,29 +156,64 @@ function Welcome(){
                 </div>
                 <div className="flex">
                     <div>
-                        <div className="loomChatHeadline">Loomactica</div>
-                        <h1>Battleship</h1>
-                        <h2>Play with a friend</h2>                        
+                        <div className="loomChatHeadline">Battleship</div>
+                        <h1>Loomactica</h1>      
+                        <input type="text" id="firstname2" name="firstname2" placeholder="Your firstname" value={firstname} onChange={e => setFirstName(e.target.value)}/>                  
+                        <input type="email" id="email2" name="email2" placeholder="Your email address"  value={mainEmail} onChange={e => setMainEmail(e.target.value)}/>
                     </div>
-                    <div>
-                        <h2>Send this link to a friend:</h2>
-                        <div className="battleshipLink">www.sowas.de</div>
-                        <h2>Or send an email to your friend:</h2>
-                        <input type="email" id="battleemail" name="battleemail" placeholder="friends email address" />
+                    <div >
+                        {statusBattleship !== 2 &&
+                        <div className="flex battleshipside" >
+                            <div>
+                                <h2>Play with a friend and send this link to a friend:</h2>
+                                <div className="battleshipLink">{link2}</div>
+                            </div>
+                            <button className="welcomeButton2" type="button" onClick={changeRoutingPlay}>Play</button>
+                        </div>
+                        }
+                        {statusBattleship===1 &&
+                        <div className="flex battleshipside" >                                
+                            <div>
+                                <h2>Or send an email to your friend:</h2>
+                                <input type="email" id="battleemail" name="battleemail" placeholder="friends email address" value={friendEmail} onChange={e => setFriendEmail(e.target.value)}/>
+                            </div>
+                            <input type="submit" value="Send" onClick={sendBattleshipMail}></input>                                
+                        </div> 
+                        }      
+                        {statusBattleship===2 &&
+                            <div className="flex battleshipside">
+                                <div>
+                                    <h1>The inviation was sent successfully!</h1>
+                                    <h2>You can now go and start the battle!</h2>
+                                </div>                                    
+                                <button className="welcomeButton2" type="button" onClick={changeRoutingPlay}>Play</button>
+                            </div>
+                        }   
+                        {statusBattleship===3 &&
+                        <div className="flex battleshipside">
+                            <div>
+                                <h1>A problem occured</h1>
+                                <div className="mailError">{error2}</div>
+                            </div>                                
+                            <button type="button" onClick={()=> setStatusBattleship(1)} className="welcomeButton2">Go back</button>
+                        </div>
+                        }
+                        {statusBattleship===4 &&
+                        <div className="flex battleshipside">
+                            <div>
+                                <h1>Please fill out all fields!</h1>
+                                <h2>Please go back and try again!</h2>
+                            </div>                                
+                            <button type="button" onClick={()=> setStatusBattleship(1)} className="welcomeButton2">Go back</button>
+                        </div>
+                        }
                     </div>  
                 </div>
             </div>  
-            <div id="Registration">
-                <div>
-                    <canvas id="loomPlayMoreCanvas"
-                        ref={canvasRef}
-                    ></canvas>
-                </div>
-                <div>
-                    <h1>Registration</h1>
-                    <h2>Play more games with friends</h2> 
-                </div>
-            </div>            
+            <div id="end">
+                <div>This is not the END</div>
+                <h2>Coming more next</h2>
+            </div>             
         </div>        
     );
 }

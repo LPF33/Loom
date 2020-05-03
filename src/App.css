@@ -6,4 +6,13 @@
     box-sizing: border-box;
 }
 
+#welcomeCanvas {
+    position: fixed;
+    top:0;
+    left:0;
+    background-color: black;
+    z-index:-1;
+    cursor: none;
+  }
+
 

@@ -13,8 +13,14 @@ export default function App(){
                     component={Registration}
                 /> 
                 <Route
-                    path = "/loomChat"
-                    component={LoomChat}
+                    exact path = "/loomChat/:roomnumber"
+                    render={props => (
+                        <LoomChat
+                            key={props.match.url}
+                            match={props.match}
+                            history={props.history}
+                        />
+                    )}
                 />
             </BrowserRouter> 
         </div>

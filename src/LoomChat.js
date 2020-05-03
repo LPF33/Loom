@@ -3,11 +3,12 @@ import {useSelector} from "react-redux";
 import "./LoomChat.css";
 import loomPaintCanvas from "./loomPaintCanvas";
 import {socket} from "./sockets.js";
+import axios from "./axios.js";
 
 function Chat(){
 
     const [messageDraft, setMessageDraft] = useState("");
-    const elemRef = useRef();
+    const elemRef = useRef();    
 
     let messages = useSelector((state) => state.allMessages || []); 
 
@@ -36,7 +37,7 @@ function Chat(){
                     placeholder="Type a message"
                     onChange={e => setMessageDraft(e.target.value)}
                     onKeyDown={e => {
-                        if(e.key == "Enter"){
+                        if(e.key === "Enter"){
                             handleClick();
                         }
                     }}
@@ -47,16 +48,31 @@ function Chat(){
     );
 }
 
-export default function LoomChat(){
+export default function LoomChat(props){
 
+    const serverUrl = "http://localhost:8080";
+    const mainUrl = "http://localhost:3000";
+
+    const [room, setRoom] = useState("");
     const [canvasVisible,setCanvasVisible] = useState(false);
     const [chatVisible,setChatVisible] = useState(false);
+    const [user, setUser] = useState("");
     const canvasChatRef = useRef(); 
 
     useEffect(()=> {
         const canvas = canvasChatRef.current;
         loomPaintCanvas(canvas);
     });
+
+    useEffect(()=> {
+        const param = props.match.params.roomnumber;
+        setRoom(param);
+        (async() => {
+            const user = await axios.get(`${serverUrl}/getChatUser`);
+            console.log(user);
+            setUser(user.data);
+        })(); 
+    },[props.match]);
 
     return(
         <div>
