@@ -117,18 +117,17 @@
     font-style: italic;
 }
 
-#chatVideo {
+#chatMyVideo {
     position: absolute;
     top:0;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 0;
     max-width: 80%;
     height: 15vh;
     background-color: white;
 }
 
 #canvasVideo {
-    visibility: show;
+    display: none;
 }
 
 #loomPaintCanvas {
