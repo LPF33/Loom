@@ -188,6 +188,13 @@ io.on("connection", async(socket) =>{
             data: data.message
         });
     });
+
+    socket.on("showVideo", data => {         
+        io.to(data.room).emit("showVideo",{
+            data: data.data,
+            id: userId
+        });
+    });
 });
 
 server.listen(process.env.PORT || 8080);

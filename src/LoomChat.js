@@ -5,13 +5,57 @@ import loomPaintCanvas from "./loomPaintCanvas";
 import {socket} from "./sockets.js";
 import axios from "./axios.js";
 
-function Video(){
+function Video(props){
 
-    let video = useSelector((state) => state.UserVideo || []); 
+    const {room} = props;
+    let userVideos = useSelector((state) => state.UserVideo || []); 
+    const [mute,setMute] = useState(true);
+
+    const videoElem = useRef();
+    const canvasVideo = useRef();
+    const getVideo = async() => {
+        const stream = await navigator.mediaDevices.getUserMedia({audio: mute, video: {width: 350, height: 200}});        
+        videoElem.current.srcObject = stream;
+        videoElem.current.onloadedmetadata = function(e) {
+            videoElem.current.play();
+        };
+        /* Sendung the media data
+        const media = new MediaRecorder(stream);
+        media.ondataavailable = e => {
+            socket.emit("showVideo", {data:e.data, room});
+        };
+        media.start(1000);*/
+
+        const canvas = canvasVideo.current;
+        const ctx = canvas.getContext("2d");
+        canvas.width = 350;
+        canvas.height = 200;
+        ctx.width = canvas.width;
+        ctx.height = canvas.height;
+        setInterval(()=>{
+            let video = videoElem.current;
+            ctx.drawImage(video,0,0,ctx.width, ctx.height);
+            socket.emit("showVideo", {room, data:canvas.toDataURL("image")});
+        }, 100);
+        
+    }; 
+
+    useEffect(()=> {
+        getVideo();
+    },[mute]);  
 
     return(
         <div id="chatVideo">
-            <img src={video}/>
+            <video ref={videoElem}></video>
+            <button onClick={()=> {
+                if(mute){
+                    setMute(false);
+                }else{
+                    setMute(true);
+                }
+            }}
+            >Mute</button>
+            <canvas id="canvasVideo" ref={canvasVideo}></canvas>
         </div>
     );
 }
@@ -137,7 +181,7 @@ export default function LoomChat(props){
             }
             {user &&
             <div>
-                {videoVisible && <Video />}
+                {videoVisible && <Video room={room}/>}
                 <div id="chat-middle">
                     {chatVisible && <Chat user={user} room={room}/>}
                     {canvasVisible && <canvas ref={canvasChatRef} id="loomPaintCanvas"></canvas>}                

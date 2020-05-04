@@ -127,6 +127,10 @@
     background-color: white;
 }
 
+#canvasVideo {
+    visibility: show;
+}
+
 #loomPaintCanvas {
     background-color: white;
 }

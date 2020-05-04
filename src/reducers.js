@@ -20,7 +20,7 @@ export default function (state = {}, action) {
     }
 
     if(action.type === "showVideo"){
-        const UserVideo = action.data;
+        const UserVideo = state.UserVideo ? {...state.UserVideo, [action.data.id] : action.data.data} : {[action.data.id] : action.data.data};
 
         state = {
             ...state,

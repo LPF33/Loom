@@ -14,7 +14,7 @@ export function showUser(user){
 
 export function showVideo(video){
     return {
-        type: "shoeVideo",
+        type: "showVideo",
         data: video
     };
 }

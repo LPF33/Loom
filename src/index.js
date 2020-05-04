@@ -13,7 +13,7 @@ import reducer from "./reducers.js";
 import axios from "./axios.js";	
 const store = createStore(
     reducer,
-    composeWithDevTools(applyMiddleware(reduxPromise))
+    composeWithDevTools(applyMiddleware(reduxPromise)),
 );
 
 init(store); 
