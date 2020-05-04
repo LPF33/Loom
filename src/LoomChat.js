@@ -1,18 +1,19 @@
 import React, {useState, useEffect, useRef} from "react";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import "./LoomChat.css";
 import loomPaintCanvas from "./loomPaintCanvas";
 import {socket} from "./sockets.js";
 import axios from "./axios.js";
+import {stopMyVideo, oldChatMessages} from "./action.js";
 
 function AllVideos(){
 
-    const videos = useSelector(state => state.UserVideo);  
+    const videos = useSelector(state => state.UserVideo );  
 
     return(
-        <div>
+        <div id="usersVideo">
             {videos && Object.entries(videos).map(([key, value]) => 
-                <img key={key} src={value}/>
+                <img className="usersVideo" key={key} src={value} alt="videochat"/>
             )}
         </div>
     );
@@ -21,12 +22,12 @@ function AllVideos(){
 function Video(props){
 
     const {room} = props;
-    const [mute,setMute] = useState(true);
+    const videoVisible = useSelector(state => state.videoVisible);
 
     const videoElem = useRef();
     const canvasVideo = useRef();
     const getVideo = async() => {
-        const stream = await navigator.mediaDevices.getUserMedia({audio: mute, video: {width: 350, height: 200}});        
+        const stream = await navigator.mediaDevices.getUserMedia({video: {width: 350, height: 200}});        
         videoElem.current.srcObject = stream;
         videoElem.current.onloadedmetadata = function() {
             videoElem.current.play();
@@ -44,28 +45,28 @@ function Video(props){
         canvas.height = 200;
         ctx.width = canvas.width;
         ctx.height = canvas.height;
-        setInterval(()=>{
-            let video = videoElem.current;
-            ctx.drawImage(video,0,0,ctx.width, ctx.height);
-            socket.emit("showVideo", {room, data:canvas.toDataURL("image")});
-        }, 100);   
+        const drawImage = () => {
+            let video = videoElem.current;  
+            if(video){
+                ctx.drawImage(video,0,0,ctx.width, ctx.height);
+                socket.emit("showVideo", {room, data:canvas.toDataURL("image/webp")});  
+                setTimeout(drawImage,100);
+            } else{
+                socket.emit("noVideo", room);
+            }  
+        };
+        drawImage(); 
     }; 
 
-    useEffect(()=> {
-        getVideo();
-    },[mute]);  
+    useEffect(() => { 
+        if(videoVisible){
+            getVideo();
+        } 
+    },[videoVisible]);
 
     return(
         <div id="chatMyVideo">
             <video ref={videoElem}></video>
-            <button onClick={()=> {
-                if(mute){
-                    setMute(false);
-                }else{
-                    setMute(true);
-                }
-            }}
-            >Mute</button>
             <canvas id="canvasVideo" ref={canvasVideo}></canvas>
         </div>
     );
@@ -76,7 +77,7 @@ function Chat(props){
     const {firstname,lastname} = props.user;
     const {room} = props;
 
-    const [messageDraft, setMessageDraft] = useState("");
+    const [messagedraft, setmessagedraft] = useState("");
     const elemRef = useRef();    
 
     let messages = useSelector((state) => state.allMessages || []); 
@@ -88,8 +89,8 @@ function Chat(props){
     },[messages]);
 
     function handleClick(){
-        socket.emit("chatMessage", {room, message:{messageDraft,firstname,lastname}});
-        setMessageDraft("");
+        socket.emit("chatMessage", {room, messagedraft,firstname,lastname});
+        setmessagedraft("");
     }
 
     return(
@@ -98,16 +99,16 @@ function Chat(props){
                 {messages && 
                     messages.map((message,index) => 
                         <div className="message" key={index} >
-                            <div className="message1">{message.data.firstname} {message.data.lastname}</div>
-                            <div className="message2">{message.data.messageDraft}</div>    
+                            <div className="message1">{message.firstname} {message.lastname}</div>
+                            <div className="message2">{message.messagedraft}</div>    
                         </div>
                     )}  
             </div>        
             <div className="chatInput">
                 <input type="text" 
-                    value={messageDraft} 
+                    value={messagedraft} 
                     placeholder="Type a message"
-                    onChange={e => setMessageDraft(e.target.value)}
+                    onChange={e => setmessagedraft(e.target.value)}
                     onKeyDown={e => {
                         if(e.key === "Enter"){
                             handleClick();
@@ -123,6 +124,7 @@ function Chat(props){
 export default function LoomChat(props){
 
     const serverUrl = "http://127.0.0.1:8080";
+    const dispatch = useDispatch();
 
     const [room, setRoom] = useState("");
     const [firstname, setFirstName] = useState("");
@@ -132,7 +134,7 @@ export default function LoomChat(props){
     const [canvasVisible,setCanvasVisible] = useState(false);
     const [chatVisible,setChatVisible] = useState(false);
     const [videoVisible,setVideoVisible] = useState(false);
-    const [allVideosVisible,setallVideosVisible] = useState(false);
+    const [allVideosVisible,setallVideosVisible] = useState(true);
     const [user, setUser] = useState("");
     const canvasChatRef = useRef(); 
 
@@ -145,8 +147,9 @@ export default function LoomChat(props){
         const param = props.match.params.roomnumber;
         setRoom(param);        
         (async() => {
-            const user = await axios.get(`${serverUrl}/getChatUser`);
-            setUser(user.data.user);           
+            const user = await axios.get(`${serverUrl}/getChatUser/${param}`);
+            setUser(user.data.user); 
+            dispatch(oldChatMessages(user.data.data));
         })();         
     },[props.match]);
 
@@ -154,12 +157,17 @@ export default function LoomChat(props){
         socket.emit("useronline", room);
     },[user]);
 
+    useEffect(() => {
+        dispatch(stopMyVideo(videoVisible));
+    },[videoVisible]);
+
     const sendUserData = () => {
         (async() => {
             const check = await axios.post(`${serverUrl}/startLoomChat`, {firstname,lastname,room});
             if(check.data.success){
-                const user = await axios.get(`${serverUrl}/getChatUser`);
+                const user = await axios.get(`${serverUrl}/getChatUser/${room}`);
                 setUser(user.data.user);
+                dispatch(oldChatMessages(user.data.data));
             } else {
                 setStatus(2);
                 setError(check.data.error);
@@ -194,7 +202,7 @@ export default function LoomChat(props){
             {user &&
             <div>
                 {videoVisible && <Video room={room}/>}
-                {allVideosVisible && <AllVideos show={allVideosVisible}/>}
+                {allVideosVisible && <AllVideos />}
                 <div id="chat-middle">
                     {chatVisible && <Chat user={user} room={room}/>}
                     {canvasVisible && <canvas ref={canvasChatRef} id="loomPaintCanvas"></canvas>}                
@@ -208,20 +216,10 @@ export default function LoomChat(props){
                             setChatVisible(true);
                         }
                     }}>Chat</button>
-                    <button className="chatButton" type="button" onClick={()=> {
-                        if(videoVisible){
-                            setVideoVisible(false);
-                        }else {
-                            setVideoVisible(true);
-                        }
-                    }}>MyCam</button>
-                    <button className="chatButton" type="button" onClick={()=> {
-                        if(allVideosVisible){
-                            setallVideosVisible(false);
-                        }else {
-                            setallVideosVisible(true);
-                        }
-                    }}>Videos</button>
+                    {videoVisible && <button className="chatButtonred" type="button" onClick={()=> setVideoVisible(false)}>MyCam - OFF</button>}
+                    {!videoVisible && <button className="chatButton" type="button" onClick={()=> setVideoVisible(true)}>MyCam - ON</button>}
+                    {allVideosVisible && <button className="chatButton" type="button" onClick={()=> setallVideosVisible(false)}>Hide Videos</button>}
+                    {!allVideosVisible && <button className="chatButtonred" type="button" onClick={()=> setallVideosVisible(true)}>Show Videos</button>}
                     <button className="chatButton" type="button" onClick={()=> {
                         if(canvasVisible){
                             setCanvasVisible(false);

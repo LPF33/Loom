@@ -218,7 +218,7 @@ function Welcome(){
     );
 }
 
-const showWelcomePage = (window.location.pathname === '/welcome');
+const showWelcomePage = (window.location.pathname === '/');
 
 if(showWelcomePage){
     ReactDOM.render(

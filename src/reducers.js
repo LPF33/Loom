@@ -2,8 +2,17 @@ export default function (state = {}, action) {
 
     if(action.type === "receivedMessage"){
 
-        const allMessages = state.allMessages ? [...state.allMessages, action.message] : [action.message];
+        const allMessages = state.allMessages ? [...state.allMessages, {firstname: action.message.firstname, lastname: action.message.lastname, messagedraft: action.message.messagedraft}] : [{firstname: action.message.firstname,lastname: action.message.lastname,messagedraft: action.message.messagedraft}];
+        
+        state = {
+            ...state,
+            allMessages
+        };
+    }
 
+    if(action.type === "oldChatMessages"){
+        const allMessages = action.data; console.log(action.data);
+        
         state = {
             ...state,
             allMessages
@@ -25,6 +34,25 @@ export default function (state = {}, action) {
         state = {
             ...state,
             UserVideo
+        };
+    }
+
+    if(action.type === "stopMyVideo"){
+        const videoVisible = action.data;
+
+        state={
+            ...state,
+            videoVisible
+        };
+    }
+
+    if(action.type === "notMyVideo"){ 
+        delete state.UserVideo[action.data];
+        const data = state.UserVideo.length >= 1 ? state.UserVideo : null; 
+
+        state={
+            ...state,
+            UserVideo: data
         };
     }
 

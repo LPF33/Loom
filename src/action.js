@@ -5,6 +5,13 @@ export function chatMessage(message){
     };
 }
 
+export function oldChatMessages(data){
+    return {
+        type: "oldChatMessages",
+        data : data
+    };
+}
+
 export function showUser(user){
     return {
         type: "showUser",
@@ -16,5 +23,19 @@ export function showVideo(video){
     return {
         type: "showVideo",
         data: video
+    };
+}
+
+export function stopMyVideo(videoVisible){
+    return{
+        type: "stopMyVideo",
+        data: videoVisible
+    };
+}
+
+export function notMyVideo(data){
+    return{
+        type: "notMyVideo",
+        data: data
     };
 }

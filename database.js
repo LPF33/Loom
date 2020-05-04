@@ -17,7 +17,12 @@ exports.storeSocketId = (userId, socketId) => {
         [userId, socketId]);
 };
 
-exports.storeMesssages = (room, data) => {
-    return db.query('INSERT INTO messages (room, message_data) VALUES ($1,$2);',
-        [room, data]);
+exports.storeMesssages = (room, messagedraft,firstname,lastname) => {
+    return db.query('INSERT INTO messages (room, messagedraft,firstname,lastname) VALUES ($1,$2,$3,$4);',
+        [room, messagedraft,firstname,lastname]);
+};
+
+exports.getChatMessages = room => {
+    return db.query('SELECT * FROM messages WHERE room=$1;',
+        [room]);
 };

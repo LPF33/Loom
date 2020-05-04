@@ -20,7 +20,9 @@ CREATE TABLE sockets (
 Create TABLE messages (
     id SERIAL PRIMARY KEY,
     room VARCHAR NOT NULL,
-    message_data VARCHAR,
+    firstname VARCHAR(200) NOT NULL,
+    lastname VARCHAR(200) NOT NULL,
+    messagedraft VARCHAR,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

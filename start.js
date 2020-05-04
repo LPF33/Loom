@@ -142,6 +142,7 @@ app.post("/startLoomChat", async(request, response) => {
     } else {
         const userId = await database.insertChatUser(firstname,lastname,room);
         request.session.userId = userId.rows[0].id;
+        request.session.room = room;
         response.json({
             success: true
         });
@@ -149,16 +150,20 @@ app.post("/startLoomChat", async(request, response) => {
     
 });
 
-app.get("/getChatUser", async(request, response) => {
-    if(!request.session.userId){
+app.get("/getChatUser/:room", async(request, response) => {
+    const {room} = request.params;
+    const check = room === request.session.room; 
+    if(!request.session.userId || !check){
         response.json({
             user: false
         });
     } else {
         const userId = request.session.userId;
         const userdata = await database.getUser(userId); 
+        const chatMessages = await database.getChatMessages(room); 
         response.json({
-            user: userdata.rows[0]
+            user: userdata.rows[0],
+            data: chatMessages.rows
         });
     }
     
@@ -182,10 +187,13 @@ io.on("connection", async(socket) =>{
         io.to(room).emit("useronline",userdata.rows[0]);
     });       
 
-    socket.on("chatMessage", async (data) => {      
-        await database.storeMesssages(data.room, data.message);
-        io.to(data.room).emit("chatMessage",{
-            data: data.message
+    socket.on("chatMessage", async (data) => {     
+        const {room, messagedraft,firstname,lastname} = data; 
+        await database.storeMesssages(room, messagedraft,firstname,lastname);
+        io.to(data.room).emit("chatMessage",{ 
+            messagedraft,
+            firstname,
+            lastname
         });
     });
 
@@ -194,6 +202,10 @@ io.on("connection", async(socket) =>{
             data: data.data,
             id: userId
         });
+    });
+
+    socket.on("noVideo", room => {   
+        io.to(room).emit("noVideo", userId );
     });
 });
 
