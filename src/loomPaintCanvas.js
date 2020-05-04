@@ -8,7 +8,7 @@ export default function canvas(canvas){
     ctx.canvas.width = window.innerWidth/2;
     ctx.canvas.height = window.innerHeight/2;
     
-    /*const socket = io.connect();
+    /*
     const pencil = document.querySelector("#pencil");
     const rectangle = document.querySelector("#rectangle");
     const circle = document.querySelector("#circle");

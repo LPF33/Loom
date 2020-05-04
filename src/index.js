@@ -18,8 +18,8 @@ const store = createStore(
 
 init(store); 
 
-const serverUrl = "http://localhost:8080";
-const mainUrl = "http://localhost:3000";
+const serverUrl = "http://127.0.0.1:8080";
+const mainUrl = "http://127.0.0.1:3000";
 
 function FriendEmail(props){
 

@@ -24,6 +24,26 @@
     height: 10vh;
 }
 
+#noChatUser{
+    width: 20%;
+    height: 40%;
+    position: absolute;
+    top:50%;
+    left: 20px;
+    transform: translateY(-50%);
+    background-color: white;
+    border-radius: 10px;
+}
+
+.mailErrorChat{
+    background-color: red;
+    font-size: 1.3vw;
+    font-weight: bold;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+}
+
 #chat-middle{
     width: 100%;
     position: absolute;
@@ -87,6 +107,14 @@
     margin: 10px;
     border-bottom: 2px dashed black;
     word-wrap: break-word;
+}
+
+.message1{
+    color: blue;
+}
+.message2{
+    font-size: 1.5vw;
+    font-style: italic;
 }
 
 #loomPaintCanvas {

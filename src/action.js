@@ -4,3 +4,10 @@ export function chatMessage(message){
         message : message
     };
 }
+
+export function showUser(user){
+    return {
+        type: "showUser",
+        data: user
+    }
+}

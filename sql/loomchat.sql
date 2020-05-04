@@ -19,9 +19,8 @@ CREATE TABLE sockets (
 
 Create TABLE messages (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER  NOT NULL,
     room VARCHAR NOT NULL,
-    message_text TEXT,
+    message_data VARCHAR,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

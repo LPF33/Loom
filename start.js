@@ -5,15 +5,15 @@ const compression = require('compression');
 const cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const csurf = require("csurf");
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+
 const cryptoRandomString = require("crypto-random-string");
 const ses = require("./ses");
-const database = require("./database.js");
+const database = require("./database");
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, csrf-token");
+    res.header("Access-Control-Allow-Credentials", "true");
     next();
 });
 
@@ -28,26 +28,19 @@ const cookieSessionMiddleware = cookieSession({
 });
 app.use( cookieSessionMiddleware);
 
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
 io.use(function(socket, next) {
+    socket.request.connection.encrypted = false;    
     cookieSessionMiddleware(socket.request, socket.request.res, next);
 });
-/*
+
 app.use(csurf());
 
 app.use(function(req, res, next){
     res.cookie('mytoken', req.csrfToken());
     next();
-});*/
-
-io.on("connection", function(socket){        
-    console.log(socket.id);
-
-    socket.on("chatMessage", data => {       
-        
-        io.sockets.emit("chatMessage",{
-            data
-        });
-    });
 });
 
 app.get("/randomCode", (request, response) => {
@@ -157,10 +150,43 @@ app.post("/startLoomChat", async(request, response) => {
 });
 
 app.get("/getChatUser", async(request, response) => {
-    const userId = request.session.userId;
-    const userdata = await database.getUser(userId); console.log(userId,userdata);
-    response.json({
-        user: userdata.rows[0]
+    if(!request.session.userId){
+        response.json({
+            user: false
+        });
+    } else {
+        const userId = request.session.userId;
+        const userdata = await database.getUser(userId); 
+        response.json({
+            user: userdata.rows[0]
+        });
+    }
+    
+});
+
+io.on("connection", async(socket) =>{    
+    const userId = socket.request.session.userId;
+
+    if(userId){
+        await database.storeSocketId(userId, socket.id);
+    }
+    
+    if(!socket.request.session.userId){
+        console.log("User is not connected");
+        return socket.disconnect(true);
+    }
+
+    socket.on("useronline", async (room) => { 
+        socket.join(room);
+        const userdata = await database.getUser(userId); 
+        io.to(room).emit("useronline",userdata.rows[0]);
+    });
+
+    socket.on("chatMessage", async (data) => {      
+        await database.storeMesssages(data.room, data.message);
+        io.to(data.room).emit("chatMessage",{
+            data: data.message
+        });
     });
 });
 

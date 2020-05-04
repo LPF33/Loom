@@ -9,6 +9,7 @@
     "aws-sdk": "^2.665.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
+    "cmake": "0.0.4",
     "compression": "^1.7.4",
     "cookie-session": "^1.4.0",
     "crypto-random-string": "^3.2.0",
