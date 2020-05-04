@@ -117,6 +117,16 @@
     font-style: italic;
 }
 
+#chatVideo {
+    position: absolute;
+    top:0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 80%;
+    height: 15vh;
+    background-color: white;
+}
+
 #loomPaintCanvas {
     background-color: white;
 }

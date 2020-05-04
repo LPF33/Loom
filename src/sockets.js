@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client';
-import {chatMessage, showUser} from "./action";
+import {chatMessage, showUser, showVideo} from "./action";
 
 export let socket;
 
@@ -19,6 +19,13 @@ export const init = store => {
         "useronline",
         user => store.dispatch(
             showUser(user)
+        )
+    );
+
+    socket.on(
+        "showVideo",
+        video => store.dispatch(
+            showVideo(video)
         )
     );
 };

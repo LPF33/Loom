@@ -19,5 +19,14 @@ export default function (state = {}, action) {
         };
     }
 
+    if(action.type === "showVideo"){
+        const UserVideo = action.data;
+
+        state = {
+            ...state,
+            UserVideo
+        };
+    }
+
     return state;
 }

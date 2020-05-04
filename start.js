@@ -180,7 +180,7 @@ io.on("connection", async(socket) =>{
         socket.join(room);
         const userdata = await database.getUser(userId); 
         io.to(room).emit("useronline",userdata.rows[0]);
-    });
+    });       
 
     socket.on("chatMessage", async (data) => {      
         await database.storeMesssages(data.room, data.message);

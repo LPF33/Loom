@@ -5,6 +5,17 @@ import loomPaintCanvas from "./loomPaintCanvas";
 import {socket} from "./sockets.js";
 import axios from "./axios.js";
 
+function Video(){
+
+    let video = useSelector((state) => state.UserVideo || []); 
+
+    return(
+        <div id="chatVideo">
+            <img src={video}/>
+        </div>
+    );
+}
+
 function Chat(props){
 
     const {firstname,lastname} = props.user;
@@ -65,6 +76,7 @@ export default function LoomChat(props){
     const [error, setError] = useState("");
     const [canvasVisible,setCanvasVisible] = useState(false);
     const [chatVisible,setChatVisible] = useState(false);
+    const [videoVisible,setVideoVisible] = useState(false);
     const [user, setUser] = useState("");
     const canvasChatRef = useRef(); 
 
@@ -125,6 +137,7 @@ export default function LoomChat(props){
             }
             {user &&
             <div>
+                {videoVisible && <Video />}
                 <div id="chat-middle">
                     {chatVisible && <Chat user={user} room={room}/>}
                     {canvasVisible && <canvas ref={canvasChatRef} id="loomPaintCanvas"></canvas>}                
@@ -138,7 +151,13 @@ export default function LoomChat(props){
                             setChatVisible(true);
                         }
                     }}>Chat</button>
-                    <button className="chatButton" type="button">Video</button>
+                    <button className="chatButton" type="button" onClick={()=> {
+                        if(videoVisible){
+                            setVideoVisible(false);
+                        }else {
+                            setVideoVisible(true);
+                        }
+                    }}>Video</button>
                     <button className="chatButton" type="button" onClick={()=> {
                         if(canvasVisible){
                             setCanvasVisible(false);
