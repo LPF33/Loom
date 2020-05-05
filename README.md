@@ -1,11 +1,16 @@
 # Loom
-Invite people to chat & more!
+Invite people to a Videochat!
+    Or play Battleship LOOMactica!
 
 This project is not finished yet!
 
 ## Description:
-On the welcome page you can invite people to join your session! In this session you can chat and draw together on a Canvas field.
-All people are connected through a WebSocket with socket.io. Every session has it's own group in socket.io!
+Invite your friends to join a meeting. 
+Features: Videochat, Chat, Whiteboard
+You can send an invitation email to your friend to this chat, or just send the link to this chat session.
+You see how is online, can switch on/off the Camera, draw or paint on the Whiteboard, leave the chat, the user get an update. 
+
+Still missing: Audio, LOOMactica, mayba some more Whiteboard tools!
 
 ## PREVIEW
 ![](Loom.gif)
@@ -17,5 +22,4 @@ All people are connected through a WebSocket with socket.io. Every session has i
 - Express
 - PostgreSQL
 - Cookie-Session
-- Csurf
 - Javascript / HTML CANVAS
