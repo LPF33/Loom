@@ -1,125 +1,13 @@
-import React, {useState, useEffect, useRef} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import React, {useState, useEffect} from "react";
+import {useDispatch} from "react-redux";
 import "./LoomChat.css";
 import {socket} from "./sockets.js";
 import axios from "./axios.js";
 import {stopMyVideo, oldChatMessages} from "./action.js";
 import Whiteboard from "./Whiteboard.js";
-
-function AllVideos(){
-
-    const videos = useSelector(state => state.UserVideo );  
-
-    return(
-        <div id="usersVideo">
-            {videos && Object.entries(videos).map(([key, value]) => 
-                <img className="usersVideo" key={key} src={value} alt="videochat"/>
-            )}
-        </div>
-    );
-}
-
-function Video(props){
-
-    const {room} = props;
-    const videoVisible = useSelector(state => state.videoVisible);
-
-    const videoElem = useRef();
-    const canvasVideo = useRef();
-    const getVideo = async() => {
-        const stream = await navigator.mediaDevices.getUserMedia({video: {width: 350, height: 200}});        
-        videoElem.current.srcObject = stream;
-        videoElem.current.onloadedmetadata = function() {
-            videoElem.current.play();
-        };
-        /* Sendung the media data
-        const media = new MediaRecorder(stream);
-        media.ondataavailable = e => {
-            socket.emit("showVideo", {data:e.data, room});
-        };
-        media.start(1000);*/
-        
-        const canvas = canvasVideo.current;
-        const ctx = canvas.getContext("2d");
-        canvas.width = 350;
-        canvas.height = 200;
-        ctx.width = canvas.width;
-        ctx.height = canvas.height;
-        const drawImage = () => {
-            let video = videoElem.current;  
-            if(video){
-                ctx.drawImage(video,0,0,ctx.width, ctx.height);
-                socket.emit("showVideo", {room, data:canvas.toDataURL("image/webp")});  
-                setTimeout(drawImage,100);
-            } else{
-                socket.emit("noVideo", room);
-            }  
-        };
-        drawImage(); 
-    }; 
-
-    useEffect(() => { 
-        if(videoVisible){
-            getVideo();
-        } 
-    },[videoVisible]);
-
-    return(
-        <div id="chatMyVideo">
-            <video ref={videoElem}></video>
-            <canvas id="canvasVideo" ref={canvasVideo}></canvas>
-        </div>
-    );
-}
-
-function Chat(props){
-
-    const {firstname,lastname} = props.user;
-    const {room} = props;
-
-    const [messagedraft, setmessagedraft] = useState("");
-    const elemRef = useRef();    
-
-    let messages = useSelector((state) => state.allMessages || []); 
-
-    useEffect(() => {
-        if(messages.length>1){
-            elemRef.current.scrollTop = 100000;
-        }        
-    },[messages]);
-
-    function handleClick(){
-        socket.emit("chatMessage", {room, messagedraft,firstname,lastname});
-        setmessagedraft("");
-    }
-
-    return(
-        <div id="LoomChat">
-            <div className="chatOutput" ref={elemRef}>
-                {messages && 
-                    messages.map((message,index) => 
-                        <div className="message" key={index} >
-                            <div className="message1">{message.firstname} {message.lastname}</div>
-                            <div className="message2">{message.messagedraft}</div>    
-                        </div>
-                    )}  
-            </div>        
-            <div className="chatInput">
-                <input type="text" 
-                    value={messagedraft} 
-                    placeholder="Type a message"
-                    onChange={e => setmessagedraft(e.target.value)}
-                    onKeyDown={e => {
-                        if(e.key === "Enter"){
-                            handleClick();
-                        }
-                    }}
-                />
-                <button onClick={handleClick} className="sendButton">Send</button>
-            </div>
-        </div>
-    );
-}
+import Chat from "./ChatApp";
+import Video from "./MyVideo";
+import AllVideos from "./AllUserVideos";
 
 export default function LoomChat(props){
 
@@ -199,7 +87,7 @@ export default function LoomChat(props){
                 {allVideosVisible && <AllVideos />}
 
                 {chatVisible && <Chat user={user} room={room}/>}
-                
+
                 {canvasVisible && <Whiteboard room={room}/>}   
 
                 <div id="menu" className="flex">                
