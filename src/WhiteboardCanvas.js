@@ -15,7 +15,29 @@ export default function canvas(canvas,room){
     const circle = document.querySelector("#circle");
     const clear = document.querySelector("#clear");
     const rubber = document.querySelector("#rubber");
+    const background = document.querySelector("#background");
+    const download = document.querySelector("#download");
+    const widhtInput = document.querySelector("#inputWidth");
+    const heightInput = document.querySelector("#inputHeight");
 
+    //Set Size of canvas
+    widhtInput.addEventListener("change", e=> {
+        ctx.canvas.width = e.target.value;  
+        socket.emit("canvasSize", {width:e.target.value});             
+    });
+    heightInput.addEventListener("change", e=> {
+        ctx.canvas.height = e.target.value;
+        socket.emit("canvasSize", {height:e.target.value});               
+    });
+
+    socket.on("canvasSize", data => {
+        if(data.width){
+            ctx.canvas.width = data.width;
+        }else{
+            ctx.canvas.height = data.height;
+        }
+    });
+    
     //Change Color
     let color = "black";
     const colorButtons = document.querySelectorAll(".color");
@@ -24,7 +46,15 @@ export default function canvas(canvas,room){
     };
     colorButtons.forEach(item=> {
         item.addEventListener("click", changeColor);
-    });    
+    });  
+
+    //Set background color
+    ctx.fillStyle = "white";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    background.addEventListener("click", () => { 
+        ctx.fillStyle = color;console.log(color);
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+    });
 
     //Clear canvas
     clear.addEventListener("click", () => {       
@@ -37,7 +67,7 @@ export default function canvas(canvas,room){
     let startPointX;
     let startPointY;
 
-    const paintStart = e => {
+    const paintStart = e => {       console.log("ha"); 
         painting = true;
         startPointX = e.offsetX;
         startPointY = e.offsetY;        
@@ -45,7 +75,7 @@ export default function canvas(canvas,room){
 
     const paintEnd = () => {
         painting = false;
-        rectanglePaint = false;
+        rectanglePaint = false;        
     };
     
     //rubber
@@ -74,7 +104,7 @@ export default function canvas(canvas,room){
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", erase);
-        if(painting){            
+        if(painting){                        
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(startPointX,startPointY);
@@ -95,7 +125,7 @@ export default function canvas(canvas,room){
     };
 
     let rectangleEndX;
-    let rectangleEndY;    
+    let rectangleEndY; 
 
     //draw a rectangle
     const drawRectangle = e => {
@@ -171,6 +201,14 @@ export default function canvas(canvas,room){
     rectangle.addEventListener("click", drawRectangle);
     circle.addEventListener("click", drawCircle);
     rubber.addEventListener("click", erase);
+
+    const downloadFile = () => {
+        download.download="loomchat";
+        download.href = canvas.toDataURL("image/jpeg",1);
+        download.target="_blank";
+    };
+
+    download.addEventListener("click",downloadFile);
 
     canvas.addEventListener("mousedown", paintStart);
     canvas.addEventListener("mouseup", paintEnd);

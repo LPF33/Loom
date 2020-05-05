@@ -230,6 +230,11 @@ io.on("connection", async(socket) =>{
         await database.clearWhiteboard(room);
     });
 
+    socket.on("canvasSize", data => {
+        const room = socket.request.session.room;
+        socket.to(room).emit("canvasSize", data);
+    });
+
     socket.on("leaveChat", async() => {
         const room = socket.request.session.room;
         socket.leave(room);

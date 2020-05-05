@@ -29,6 +29,25 @@
     padding: 5px;
     border-radius: 10px;
     margin: 5px;
+    text-decoration: none;
+}
+
+.canvasInput{
+    background-color: rgb(106, 219, 176);
+    color: rgb(0, 0, 0);
+    font-size: 1vw;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+    text-decoration: none;
+}
+
+.explainSizeCanvas{
+    position: absolute;
+    left: 20vw;
+    background-color: yellow;
+    font-size: 1vw;
+    padding: 2px;
 }
 
 .color {
@@ -69,4 +88,23 @@
 
 #black {
     background-color: black;
+}
+
+#setColor {
+    background: linear-gradient(black,red,blue,yellow,white);
+}
+
+#setOtherColor{
+    position: absolute;
+    transform: translateY(-120%);
+    background-color: white;
+    border: 5px solid black;
+    padding: 10px;
+}
+
+#colorOutput{
+    width:5vw;
+    height: 5vw;
+    background-color: rgb(122,122,122);
+    margin-left: 10px;
 }
