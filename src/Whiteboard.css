@@ -1,0 +1,72 @@
+#Whiteboard {
+    position: absolute;
+    bottom: 15vh;
+    right: 10vw;
+    z-index:3;
+}
+
+#WhiteboardCanvas {
+    background-color: white;    
+}
+
+#WhiteboardDiv{
+    width: 50vw;
+    height: 50vh;
+    overflow: auto;
+    border:5px solid black;
+}
+
+#tools {
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+}
+
+.tool{
+    background-color: black;
+    color: white;
+    font-size: 1vw;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.color {
+    width:20px;
+    height: 20px;
+    margin: 3px;
+    border: 2px dashed black;
+}
+
+.color:hover {
+    border: 2px solid rgb(93, 135, 252);
+}
+
+#yellow {
+    background-color: yellow;
+}
+
+#blue {
+    background-color: blue;
+}
+
+#red {
+    background-color: red;
+}
+
+#green {
+    background-color: green;
+}
+
+#white {
+    background-color: white;
+    border: 2px dashed black;
+}
+
+#white:hover {
+    border: 2px solid rgb(93, 135, 252);
+}
+
+#black {
+    background-color: black;
+}

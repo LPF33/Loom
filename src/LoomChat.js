@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useRef} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import "./LoomChat.css";
-import loomPaintCanvas from "./loomPaintCanvas";
 import {socket} from "./sockets.js";
 import axios from "./axios.js";
 import {stopMyVideo, oldChatMessages} from "./action.js";
+import Whiteboard from "./Whiteboard.js";
 
 function AllVideos(){
 
@@ -136,12 +136,6 @@ export default function LoomChat(props){
     const [videoVisible,setVideoVisible] = useState(false);
     const [allVideosVisible,setallVideosVisible] = useState(true);
     const [user, setUser] = useState("");
-    const canvasChatRef = useRef(); 
-
-    useEffect(()=> {
-        const canvas = canvasChatRef.current;
-        loomPaintCanvas(canvas);
-    });
 
     useEffect(()=> {
         const param = props.match.params.roomnumber;
@@ -203,10 +197,11 @@ export default function LoomChat(props){
             <div>
                 {videoVisible && <Video room={room}/>}
                 {allVideosVisible && <AllVideos />}
-                <div id="chat-middle">
-                    {chatVisible && <Chat user={user} room={room}/>}
-                    {canvasVisible && <canvas ref={canvasChatRef} id="loomPaintCanvas"></canvas>}                
-                </div>            
+
+                {chatVisible && <Chat user={user} room={room}/>}
+                
+                {canvasVisible && <Whiteboard room={room}/>}   
+
                 <div id="menu" className="flex">                
                     <h1>LOOM Chat</h1>
                     <button className="chatButton" type="button"onClick={()=> {

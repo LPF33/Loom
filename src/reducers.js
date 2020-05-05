@@ -11,7 +11,7 @@ export default function (state = {}, action) {
     }
 
     if(action.type === "oldChatMessages"){
-        const allMessages = action.data; console.log(action.data);
+        const allMessages = action.data; 
         
         state = {
             ...state,

@@ -24,7 +24,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 const cookieSessionMiddleware = cookieSession({
     secret: "Loom, chat & paint!",
-    maxAge: 1000 * 60 * 60 * 24
+    maxAge: 1000 * 60 * 60 * 24,
+    sameSite: "none",
+    secure : false
 });
 app.use( cookieSessionMiddleware);
 
@@ -207,6 +209,15 @@ io.on("connection", async(socket) =>{
     socket.on("noVideo", room => {   
         io.to(room).emit("noVideo", userId );
     });
+
+    socket.on("painting", data => { 
+        socket.to(data.room).emit("painting", data);
+    });
+
+    socket.on("clear", room => {
+        io.to(room).emit("clear");
+    });
+
 });
 
 server.listen(process.env.PORT || 8080);

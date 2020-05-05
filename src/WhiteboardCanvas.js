@@ -1,14 +1,15 @@
-export default function canvas(canvas){
+import {socket} from "./sockets.js";
+
+export default function canvas(canvas,room){
 
     if(!canvas){
         return;
     }    
            
     const ctx = canvas.getContext("2d");
-    ctx.canvas.width = window.innerWidth/2;
-    ctx.canvas.height = window.innerHeight/2;
+    ctx.canvas.width = 1000;
+    ctx.canvas.height = 600;    
     
-    /*
     const pencil = document.querySelector("#pencil");
     const rectangle = document.querySelector("#rectangle");
     const circle = document.querySelector("#circle");
@@ -18,18 +19,17 @@ export default function canvas(canvas){
     //Change Color
     let color = "black";
     const colorButtons = document.querySelectorAll(".color");
-    const changeColor = e => {
-        color = e.target.attributes[1].value;
-    }
+    const changeColor = e => { 
+        color = e.target.attributes[2].value;console.log(e.target.attributes[2].value);
+    };
     colorButtons.forEach(item=> {
         item.addEventListener("click", changeColor);
-    })    
+    });    
 
     //Clear canvas
-    clear.addEventListener("click", () => {
-        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);        
-        socket.emit("clear");
-    })    
+    clear.addEventListener("click", () => {       
+        socket.emit("clear", room);
+    });    
 
     //Paint
     let painting = false;
@@ -86,7 +86,8 @@ export default function canvas(canvas){
             
             //Emit data
             socket.emit("painting", {
-                painting: canvas.toDataURL()
+                painting: canvas.toDataURL(),
+                room
             });
         }
         canvas.removeEventListener("mousemove", drawPencil);
@@ -113,12 +114,13 @@ export default function canvas(canvas){
             
             //Emit data
             socket.emit("painting", {
-                painting: canvas.toDataURL()
+                painting: canvas.toDataURL(),
+                room
             });
         }
         canvas.removeEventListener("mousemove", drawRectangle);
         canvas.addEventListener("mousemove", drawRectangle);     
-    }
+    };
 
     //Draw a circle
     const drawCircle = e => {
@@ -140,23 +142,24 @@ export default function canvas(canvas){
             
             //Emit data
             socket.emit("painting", {
-                painting: canvas.toDataURL()
+                painting: canvas.toDataURL(),
+                room
             });
         }
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.addEventListener("mousemove", drawCircle);
-    }
+    };
 
     socket.on("painting", data => {
         let image = new Image();
         let imageSrc = data.painting;
         image.onload = function(){
             ctx.drawImage(image,0,0);
-        }
+        };
         image.src = imageSrc;        
     });
 
-    socket.on("clear", data => {
+    socket.on("clear", () => {
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);         
     });
 
@@ -167,5 +170,4 @@ export default function canvas(canvas){
 
     canvas.addEventListener("mousedown", paintStart);
     canvas.addEventListener("mouseup", paintEnd);
- */
 }

@@ -1,11 +1,10 @@
 import React from 'react';
-import './App.css';
 import {BrowserRouter, Route} from "react-router-dom";
 import LoomChat from "./LoomChat.js";
 
 export default function App(){
     return(
-        <div id="App"> 
+        <div> 
             <BrowserRouter>
                 <Route
                     exact path = "/loomChat/:roomnumber"

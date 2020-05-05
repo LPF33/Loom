@@ -44,18 +44,10 @@
     border-radius: 10px;
 }
 
-#chat-middle{
-    width: 100%;
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
 #LoomChat {
+    position: absolute;
+    bottom: 15vh;
+    left: 10vw;
     width: 20vw;
     height: 60vh;
     background-color: white;
@@ -137,6 +129,10 @@
     background-color: white;
 }
 
+#chatMyVideo video{
+    width: 16vw;
+}
+
 #canvasVideo {
     display: none;
 }
@@ -147,8 +143,4 @@
 }
 .usersVideo{
     width: 16vw;
-}
-
-#loomPaintCanvas {
-    background-color: white;
 }
