@@ -63,6 +63,7 @@
     width: 3vw;
     height: 3vw;
     outline: none;
+    cursor: pointer;
 }
 
 #online:hover, #onlineX:hover{    
@@ -76,6 +77,7 @@
     font-size:3vw;
     font-weight: bold;
     outline: none;
+    cursor: pointer;
 }
 
 #showUsersOnline{
@@ -105,7 +107,29 @@
     background-color: green;
     border-radius: 100%;
     margin-left: 20px;
+    margin-right: 5px;
     animation: 1s infinite alternate point;
+}
+
+#logout {
+    background-image: url("./pics/logout.png");
+    background-size: 2vw;
+    background-position: center;
+    width:2vw;
+    height: 2vw;
+    cursor: pointer;
+}
+
+#logoutExplain{
+    position: absolute;
+    top:-5vw;
+    border: 2px solid black;
+    color: black;
+    background-color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    text-align: center;
+    padding: 5px;
 }
 
 @keyframes point{

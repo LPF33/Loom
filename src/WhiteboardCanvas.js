@@ -151,7 +151,7 @@ export default function canvas(canvas,room){
     };
 
     socket.on("painting", data => { 
-        if(data){
+        if(data){ 
             let image = new Image();
             let imageSrc = data.painting;
             image.onload = function(){

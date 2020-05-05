@@ -89,7 +89,7 @@ export default function LoomChat(props){
 
                 {canvasVisible && <Whiteboard room={room}/>}   
 
-                {userOnline && <ShowUsers />}
+                {userOnline && <ShowUsers userId={user.id}/>}
 
                 <div id="menu" className="flex">    
                     {!userOnline && <div id="online" onClick={()=>setUserOnline(true)}></div>}

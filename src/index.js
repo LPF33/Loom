@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import {init} from "./sockets.js";
 import './index.css';
 import WelcomePage from "./WelcomePage";
-import App from './App';
+import {BrowserRouter, Route, Redirect, Switch} from "react-router-dom";
+import LoomChat from "./LoomChat.js";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -16,20 +17,38 @@ const store = createStore(
 
 init(store); 
 
-const showWelcomePage = (window.location.pathname === '/');
 
-if(showWelcomePage){
-    ReactDOM.render(
-        <Provider store={store}>
-            <WelcomePage />
-        </Provider>,
-        document.querySelector("#root")
-    );
-}else{
-    ReactDOM.render(
-        <Provider store={store}>
-            <App />
-        </Provider>,
-        document.querySelector("#root")
-    );
-}
+ReactDOM.render(
+    <Provider store={store}>
+        
+        <BrowserRouter>
+            <Switch> 
+                <Route
+                    exact path = "/"
+                    component={WelcomePage}
+                />                
+                <Route
+                    exact path = "/loomChat/:roomnumber"
+                    render={props => (
+                        <LoomChat
+                            key={props.match.url}
+                            match={props.match}
+                            history={props.history}
+                        />
+                    )}
+                />
+                <Route 
+                    render={
+                        ()=>
+                            <Redirect to="/" />
+                        
+                    }
+                />
+            </Switch>
+        </BrowserRouter> 
+    </Provider>,
+    document.querySelector("#root")
+);
+
+
+

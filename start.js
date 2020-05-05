@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 const cookieSessionMiddleware = cookieSession({
     secret: "Loom, chat & paint!",
-    maxAge: 1000 * 60 * 60 * 24,
+    maxAge: 1000 * 60 * 60,
     sameSite: "none",
     secure : false
 });
@@ -171,15 +171,24 @@ app.get("/getChatUser/:room", async(request, response) => {
     
 });
 
+app.post("/chatlogout", async(request, response) => {
+    const userId = request.session.userId;
+    await database.deleteUser(userId);
+    request.session = null;
+    response.json({
+        success:true
+    });
+});
+
 io.on("connection", async(socket) =>{    
     const userId = socket.request.session.userId;
     
     if(!socket.request.session.userId){
         console.log("User is not connected");
         return socket.disconnect(true);
-    }
+    }   
 
-    socket.on("useronline", async(room) => { console.log(userId,room, "useronline");
+    socket.on("useronline", async(room) => { 
         socket.join(room);
         const allUsers = await database.getChatUsers(room);
         io.to(room).emit("useronline", {user:allUsers.rows});     
@@ -193,9 +202,7 @@ io.on("connection", async(socket) =>{
             firstname,
             lastname
         });
-    });
-
-    
+    });    
 
     socket.on("showVideo", data => {         
         io.to(data.room).emit("showVideo",{
@@ -221,6 +228,13 @@ io.on("connection", async(socket) =>{
     socket.on("clear", async(room) => {
         io.to(room).emit("clear");
         await database.clearWhiteboard(room);
+    });
+
+    socket.on("leaveChat", async() => {
+        const room = socket.request.session.room;
+        socket.leave(room);
+        const allUsers = await database.getChatUsers(room);
+        io.to(room).emit("useronline", {user:allUsers.rows});
     });
 
 });

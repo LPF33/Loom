@@ -44,3 +44,8 @@ exports.getChatMessages = room => {
     return db.query('SELECT * FROM messages WHERE room=$1;',
         [''+room+'']);
 };
+
+exports.deleteUser = userId => {
+    return db.query('DELETE FROM loomchat WHERE id=$1;',
+        [userId]);
+};
