@@ -81,11 +81,11 @@
 #showUsersOnline{
     position: absolute;
     bottom:10vh;
-    left:0; 
-    border: 5px solid black;       
+    left:0;       
     font-size: 1.5vw;
     font-style: italic;
     color: white;
+    margin:5px;
     z-index:5;
 }
 

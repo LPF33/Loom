@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS messages;
-DROP TABLE IF EXISTS sockets;
+DROP TABLE IF EXISTS whiteboard;
 DROP TABLE IF EXISTS loomchat;
 
 CREATE TABLE loomchat (
@@ -10,10 +10,10 @@ CREATE TABLE loomchat (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE sockets (
+CREATE TABLE whiteboard (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES loomchat(id) NOT NULL,
-    socket_id VARCHAR NOT NULL,
+    room VARCHAR NOT NULL UNIQUE,
+    painting TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

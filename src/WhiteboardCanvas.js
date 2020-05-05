@@ -20,7 +20,7 @@ export default function canvas(canvas,room){
     let color = "black";
     const colorButtons = document.querySelectorAll(".color");
     const changeColor = e => { 
-        color = e.target.attributes[2].value;console.log(e.target.attributes[2].value);
+        color = e.target.attributes[2].value;
     };
     colorButtons.forEach(item=> {
         item.addEventListener("click", changeColor);
@@ -150,18 +150,22 @@ export default function canvas(canvas,room){
         canvas.addEventListener("mousemove", drawCircle);
     };
 
-    socket.on("painting", data => {
-        let image = new Image();
-        let imageSrc = data.painting;
-        image.onload = function(){
-            ctx.drawImage(image,0,0);
-        };
-        image.src = imageSrc;        
+    socket.on("painting", data => { 
+        if(data){
+            let image = new Image();
+            let imageSrc = data.painting;
+            image.onload = function(){
+                ctx.drawImage(image,0,0);
+            };
+            image.src = imageSrc; 
+        }               
     });
 
     socket.on("clear", () => {
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);         
     });
+
+    socket.emit("getPainting", room);
 
     pencil.addEventListener("click", drawPencil);
     rectangle.addEventListener("click", drawRectangle);

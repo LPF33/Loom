@@ -182,7 +182,7 @@ io.on("connection", async(socket) =>{
     socket.on("useronline", async(room) => { console.log(userId,room, "useronline");
         socket.join(room);
         const allUsers = await database.getChatUsers(room);
-        io.to(room).emit("useronline", {user:allUsers.rows});
+        io.to(room).emit("useronline", {user:allUsers.rows});     
     });       
 
     socket.on("chatMessage", async (data) => {     
@@ -195,6 +195,8 @@ io.on("connection", async(socket) =>{
         });
     });
 
+    
+
     socket.on("showVideo", data => {         
         io.to(data.room).emit("showVideo",{
             data: data.data,
@@ -205,13 +207,20 @@ io.on("connection", async(socket) =>{
     socket.on("noVideo", room => {   
         io.to(room).emit("noVideo", userId );
     });
-
-    socket.on("painting", data => { 
-        socket.to(data.room).emit("painting", data);
+    
+    socket.on("getPainting", async(room)=> { 
+        const whiteboard = await database.getWhiteboard(room);
+        socket.emit("painting", whiteboard.rows[0]);  
     });
 
-    socket.on("clear", room => {
+    socket.on("painting", async(data) => { 
+        socket.to(data.room).emit("painting", data);
+        await database.storeWhiteboard(data.room, data.painting);        
+    });
+
+    socket.on("clear", async(room) => {
         io.to(room).emit("clear");
+        await database.clearWhiteboard(room);
     });
 
 });

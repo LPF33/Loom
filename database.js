@@ -17,9 +17,22 @@ exports.getChatUsers = room => {
         [''+room+'']);
 };
 
-exports.storeSocketId = (userId, socketId) => {
-    return db.query('INSERT INTO sockets (user_id, socket_id) VALUES ($1,$2);',
-        [userId, socketId]);
+exports.storeWhiteboard = (room, painting) => {
+    return db.query(`INSERT INTO whiteboard (room, painting) VALUES ($1,$2)
+                        ON CONFLICT (room)
+                            DO UPDATE
+                                SET painting = $2;`,
+    [room, painting]);
+};
+
+exports.getWhiteboard = room => {
+    return db.query('SELECT painting FROM whiteboard WHERE room = $1;',
+        [room]);
+};
+
+exports.clearWhiteboard = room => {
+    return db.query('DELETE FROM whiteboard WHERE room = $1;',
+        [room]);
 };
 
 exports.storeMesssages = (room, messagedraft,firstname,lastname) => {
