@@ -20,11 +20,10 @@ export default function (state = {}, action) {
     }
     
     if(action.type === "showUser"){
-        const UserOnline = state.UserOnline ? [...state.UserOnline, action.data] : [action.data];
 
         state = {
             ...state,
-            UserOnline
+            UserOnline : action.data.user
         };
     }
 

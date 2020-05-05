@@ -149,7 +149,7 @@ export default function Welcome(){
                         {statusBattleship !== 2 &&
                         <div className="flex battleshipside" >
                             <div>
-                                <h2>Play with a friend and send this link to a friend:</h2>
+                                <h2>Send this link to a friend:</h2>
                                 <div className="battleshipLink">{link2}</div>
                             </div>
                             <button className="welcomeButton2" type="button" onClick={changeRoutingPlay}>Play</button>

@@ -8,6 +8,7 @@ import Whiteboard from "./Whiteboard.js";
 import Chat from "./ChatApp";
 import Video from "./MyVideo";
 import AllVideos from "./AllUserVideos";
+import ShowUsers from "./ShowUsers";
 
 export default function LoomChat(props){
 
@@ -23,21 +24,21 @@ export default function LoomChat(props){
     const [chatVisible,setChatVisible] = useState(false);
     const [videoVisible,setVideoVisible] = useState(false);
     const [allVideosVisible,setallVideosVisible] = useState(true);
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState(false);
+    const [userOnline, setUserOnline] = useState(false);
 
     useEffect(()=> {
         const param = props.match.params.roomnumber;
         setRoom(param);        
         (async() => {
-            const user = await axios.get(`${serverUrl}/getChatUser/${param}`);
-            setUser(user.data.user); 
-            dispatch(oldChatMessages(user.data.data));
+            const userData = await axios.get(`${serverUrl}/getChatUser/${param}`);
+            setUser(userData.data.user); 
+            if(userData.data.user){
+                socket.emit("useronline", param);
+                dispatch(oldChatMessages(userData.data.data));
+            }            
         })();         
     },[props.match]);
-
-    useEffect(() => {
-        socket.emit("useronline", room);
-    },[user]);
 
     useEffect(() => {
         dispatch(stopMyVideo(videoVisible));
@@ -47,9 +48,7 @@ export default function LoomChat(props){
         (async() => {
             const check = await axios.post(`${serverUrl}/startLoomChat`, {firstname,lastname,room});
             if(check.data.success){
-                const user = await axios.get(`${serverUrl}/getChatUser/${room}`);
-                setUser(user.data.user);
-                dispatch(oldChatMessages(user.data.data));
+                window.location.replace(`/loomChat/${room}`);
             } else {
                 setStatus(2);
                 setError(check.data.error);
@@ -60,7 +59,7 @@ export default function LoomChat(props){
     return(
         <div>
             {!user && 
-            <div>
+            <div>                
                 <div id="header">LOOM</div> 
                 <div id="noChatUser" className="flexColumn">
                     <h1>Welcome to LOOM</h1>
@@ -90,7 +89,11 @@ export default function LoomChat(props){
 
                 {canvasVisible && <Whiteboard room={room}/>}   
 
-                <div id="menu" className="flex">                
+                {userOnline && <ShowUsers />}
+
+                <div id="menu" className="flex">    
+                    {!userOnline && <div id="online" onClick={()=>setUserOnline(true)}></div>}
+                    {userOnline && <div id="onlineX" onClick={()=>setUserOnline(false)}>X</div>}           
                     <h1>LOOM Chat</h1>
                     <button className="chatButton" type="button"onClick={()=> {
                         if(chatVisible){

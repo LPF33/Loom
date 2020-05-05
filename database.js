@@ -12,6 +12,11 @@ exports.getUser = id => {
         [id]);
 };
 
+exports.getChatUsers = room => {
+    return db.query('SELECT * FROM loomchat WHERE room = $1;',
+        [''+room+'']);
+};
+
 exports.storeSocketId = (userId, socketId) => {
     return db.query('INSERT INTO sockets (user_id, socket_id) VALUES ($1,$2);',
         [userId, socketId]);
@@ -24,5 +29,5 @@ exports.storeMesssages = (room, messagedraft,firstname,lastname) => {
 
 exports.getChatMessages = room => {
     return db.query('SELECT * FROM messages WHERE room=$1;',
-        [room]);
+        [''+room+'']);
 };

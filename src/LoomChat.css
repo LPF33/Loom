@@ -53,6 +53,67 @@
     background-color: white;
 }
 
+#online{
+    position: absolute;
+    bottom: calc(5vh - 1.5vw);
+    left: 20px;
+    background-image: url("./pics/hamburgermenu.svg");
+    background-size: 3vw;
+    background-position: center;
+    width: 3vw;
+    height: 3vw;
+    outline: none;
+}
+
+#online:hover, #onlineX:hover{    
+    transform: scale(1.2);
+}
+
+#onlineX{
+    position: absolute;
+    bottom: calc(5vh - 1.5vw);
+    left: 20px;
+    font-size:3vw;
+    font-weight: bold;
+    outline: none;
+}
+
+#showUsersOnline{
+    position: absolute;
+    bottom:10vh;
+    left:0; 
+    border: 5px solid black;       
+    font-size: 1.5vw;
+    font-style: italic;
+    color: white;
+    z-index:5;
+}
+
+.showUsersOnline{
+    width:10vw;
+    max-width: 15vw; 
+    background-color: rgb(22, 56, 148); 
+    border: 5px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    word-wrap: break-word;    
+}
+
+#point {
+    width: 1vw;
+    height: 1vw;
+    background-color: green;
+    border-radius: 100%;
+    margin-left: 20px;
+    animation: 1s infinite alternate point;
+}
+
+@keyframes point{
+    100%{
+        transform: scale(0.5);
+    }
+}
+
 #LoomChat .chatInput{
     height: 20%;
     display: absolute;

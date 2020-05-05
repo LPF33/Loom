@@ -21,8 +21,10 @@ export default function Chat(props){
     },[messages]);
 
     function handleClick(){
-        socket.emit("chatMessage", {room, messagedraft,firstname,lastname});
-        setmessagedraft("");
+        if(messagedraft){
+            socket.emit("chatMessage", {room, messagedraft,firstname,lastname});
+            setmessagedraft("");
+        }        
     }
 
     return(
