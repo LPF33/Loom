@@ -62,7 +62,10 @@ export default function LoomChat(props){
             <div>                
                 <div id="header">LOOM</div> 
                 <div id="noChatUser" className="flexColumn">
-                    <h1>Welcome to LOOM</h1>
+                    <div>
+                        <h1>Welcome to LOOM</h1>
+                        <h5>Connect&amp;Chat</h5>
+                    </div>                    
                     {status===1 &&
                         <div className="flexColumn">
                             <input type="text" id="firstname" name="firstname" placeholder="Your firstname" value={firstname} onChange={e => setFirstName(e.target.value)}/> 

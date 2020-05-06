@@ -35,6 +35,15 @@ exports.clearWhiteboard = room => {
         [room]);
 };
 
+exports.saveSize = (room, width, height) => {
+    return db.query(`INSERT INTO whiteboard (width, height) VALUES ($2,$3) WHERE room = $1
+                        ON CONFLICT (room)
+                            DO UPDATE 
+                                SET width = $2,
+                                    height = $3;`,
+    [room, width, height]);
+};
+
 exports.storeMesssages = (room, messagedraft,firstname,lastname) => {
     return db.query('INSERT INTO messages (room, messagedraft,firstname,lastname) VALUES ($1,$2,$3,$4);',
         [room, messagedraft,firstname,lastname]);

@@ -14,6 +14,8 @@ CREATE TABLE whiteboard (
     id SERIAL PRIMARY KEY,
     room VARCHAR NOT NULL UNIQUE,
     painting TEXT,
+    width INTEGER,
+    height INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -19,23 +19,23 @@ export default function canvas(canvas,room){
     const download = document.querySelector("#download");
     const widhtInput = document.querySelector("#inputWidth");
     const heightInput = document.querySelector("#inputHeight");
+    const colorOutput = document.querySelector("#colorOutput");
+
+    console.log(colorOutput.style.background);
 
     //Set Size of canvas
     widhtInput.addEventListener("change", e=> {
         ctx.canvas.width = e.target.value;  
-        socket.emit("canvasSize", {width:e.target.value});             
+        socket.emit("canvasSize", {width:e.target.value, height:canvas.height});             
     });
     heightInput.addEventListener("change", e=> {
         ctx.canvas.height = e.target.value;
-        socket.emit("canvasSize", {height:e.target.value});               
+        socket.emit("canvasSize", {width: canvas.width, height:e.target.value});               
     });
 
     socket.on("canvasSize", data => {
-        if(data.width){
-            ctx.canvas.width = data.width;
-        }else{
-            ctx.canvas.height = data.height;
-        }
+        ctx.canvas.width = data.width;
+        ctx.canvas.height = data.height;
     });
     
     //Change Color
@@ -52,7 +52,7 @@ export default function canvas(canvas,room){
     ctx.fillStyle = "white";
     ctx.fillRect(0,0,canvas.width,canvas.height);
     background.addEventListener("click", () => { 
-        ctx.fillStyle = color;console.log(color);
+        ctx.fillStyle = color;
         ctx.fillRect(0,0,canvas.width,canvas.height);
     });
 
@@ -67,7 +67,7 @@ export default function canvas(canvas,room){
     let startPointX;
     let startPointY;
 
-    const paintStart = e => {       console.log("ha"); 
+    const paintStart = e => {      
         painting = true;
         startPointX = e.offsetX;
         startPointY = e.offsetY;        

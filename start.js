@@ -10,6 +10,8 @@ const cryptoRandomString = require("crypto-random-string");
 const ses = require("./ses");
 const database = require("./database");
 
+app.use(express.static("build"));
+
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, csrf-token");
@@ -180,6 +182,10 @@ app.post("/chatlogout", async(request, response) => {
     });
 });
 
+app.get("*", function(request, response) {
+    response.sendFile(__dirname + '/build/index.html');    
+});
+
 io.on("connection", async(socket) =>{    
     const userId = socket.request.session.userId;
     
@@ -230,9 +236,10 @@ io.on("connection", async(socket) =>{
         await database.clearWhiteboard(room);
     });
 
-    socket.on("canvasSize", data => {
+    socket.on("canvasSize", async(data) => {
         const room = socket.request.session.room;
         socket.to(room).emit("canvasSize", data);
+        await database.saveSize(room,data.width, data.height);
     });
 
     socket.on("leaveChat", async() => {
