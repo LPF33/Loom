@@ -19,8 +19,7 @@ export default function canvas(canvas,room){
     const background = document.querySelector("#background");
     const download = document.querySelector("#download");
     const widhtInput = document.querySelector("#inputWidth");
-    const heightInput = document.querySelector("#inputHeight");
-    const colorOutput = document.querySelector("#colorOutput");    
+    const heightInput = document.querySelector("#inputHeight");   
 
     //Set Size of canvas
     widhtInput.addEventListener("change", e=> {
@@ -30,11 +29,6 @@ export default function canvas(canvas,room){
     heightInput.addEventListener("change", e=> {
         ctx.canvas.height = e.target.value;
         socket.emit("canvasSize", {width: canvas.width, height:e.target.value});               
-    });
-
-    socket.on("canvasSize", data => {
-        ctx.canvas.width = data.width;
-        ctx.canvas.height = data.height;
     });
     
     //Change Color
@@ -180,7 +174,11 @@ export default function canvas(canvas,room){
     };
 
     socket.on("painting", data => { 
-        if(data){ 
+        if(data && (data.width || data.height)){
+            ctx.canvas.width = data.width;
+            ctx.canvas.height = data.height;
+        }
+        if(data && data.painting){ 
             let image = new Image();
             let imageSrc = data.painting;
             image.onload = function(){
@@ -191,7 +189,7 @@ export default function canvas(canvas,room){
     });
 
     socket.on("clear", () => {
-        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);         
+        ctx.clearRect(0,0,canvas.width,canvas.height);         
     });
 
     socket.emit("getPainting", room);

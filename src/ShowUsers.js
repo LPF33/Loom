@@ -6,7 +6,7 @@ import axios from "./axios";
 export default function ShowUsers(props){
 
     const {userId} = props;
-    const serverUrl = 'https://loomchat.herokuapp.com' || "http://127.0.0.1:8080";
+    const serverUrl = process.env.PORT ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:8080";
 
     const users = useSelector(state => state.UserOnline || "");
     const [explain, setExplain] = useState(false);

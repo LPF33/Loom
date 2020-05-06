@@ -26,7 +26,7 @@ exports.storeWhiteboard = (room, painting) => {
 };
 
 exports.getWhiteboard = room => {
-    return db.query('SELECT painting FROM whiteboard WHERE room = $1;',
+    return db.query('SELECT painting, width, height FROM whiteboard WHERE room = $1;',
         [room]);
 };
 
@@ -36,11 +36,11 @@ exports.clearWhiteboard = room => {
 };
 
 exports.saveSize = (room, width, height) => {
-    return db.query(`INSERT INTO whiteboard (width, height) VALUES ($2,$3) WHERE room = $1
+    return db.query(`INSERT INTO whiteboard (room, width, height) VALUES ($1,$2,$3)
                         ON CONFLICT (room)
                             DO UPDATE 
                                 SET width = $2,
-                                    height = $3;`,
+                                    height = $3 RETURNING painting;`,
     [room, width, height]);
 };
 

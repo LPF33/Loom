@@ -238,8 +238,11 @@ io.on("connection", async(socket) =>{
 
     socket.on("canvasSize", async(data) => {
         const room = socket.request.session.room;
-        socket.to(room).emit("canvasSize", data);
-        await database.saveSize(room,data.width, data.height);
+        const painting = await database.saveSize(room,data.width, data.height);
+        if(painting.rows[0].painting){
+            data.painting = painting.rows[0].painting;
+        }        
+        io.to(room).emit("painting", data);        
     });
 
     socket.on("leaveChat", async() => {
