@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import './index.css';
 import axios from "./axios.js";	
 
-const serverUrl = 'https://loomchat.herokuapp.com/' || "http://127.0.0.1:8080";
-const mainUrl = 'https://loomchat.herokuapp.com/' || "http://127.0.0.1:3000";
+const serverUrl = 'https://loomchat.herokuapp.com' || "http://127.0.0.1:8080";
+const mainUrl = 'https://loomchat.herokuapp.com' || "http://127.0.0.1:3000";
 
 function FriendEmail(props){
 
