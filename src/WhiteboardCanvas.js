@@ -1,5 +1,10 @@
 import {socket} from "./sockets.js";
 
+let selectMoreColors;
+
+export function moreColors(color){
+    selectMoreColors = color;
+}
 
 export default function canvas(canvas,room){
 
@@ -19,7 +24,8 @@ export default function canvas(canvas,room){
     const background = document.querySelector("#background");
     const download = document.querySelector("#download");
     const widhtInput = document.querySelector("#inputWidth");
-    const heightInput = document.querySelector("#inputHeight");   
+    const heightInput = document.querySelector("#inputHeight"); 
+    const setColor = document.querySelector("#setColor");  
 
     //Set Size of canvas
     widhtInput.addEventListener("change", e=> {
@@ -40,6 +46,10 @@ export default function canvas(canvas,room){
     colorButtons.forEach(item=> {
         item.addEventListener("click", changeColor);
     });  
+
+    setColor.addEventListener("click",() => {
+        color = selectMoreColors;
+    });
 
     //Set background color
     ctx.fillStyle = "white";
