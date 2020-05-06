@@ -5,7 +5,7 @@ export let socket;
 
 export const init = store => {
     if (!socket) {
-        socket = io.connect('127.0.0.1:8080');
+        socket = io.connect(process.env.PORT || '127.0.0.1:8080');
     }
     
     socket.on(
