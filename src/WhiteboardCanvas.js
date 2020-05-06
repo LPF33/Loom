@@ -1,5 +1,6 @@
 import {socket} from "./sockets.js";
 
+
 export default function canvas(canvas,room){
 
     if(!canvas){
@@ -19,9 +20,7 @@ export default function canvas(canvas,room){
     const download = document.querySelector("#download");
     const widhtInput = document.querySelector("#inputWidth");
     const heightInput = document.querySelector("#inputHeight");
-    const colorOutput = document.querySelector("#colorOutput");
-
-    console.log(colorOutput.style.background);
+    const colorOutput = document.querySelector("#colorOutput");    
 
     //Set Size of canvas
     widhtInput.addEventListener("change", e=> {
