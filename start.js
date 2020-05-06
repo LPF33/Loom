@@ -13,7 +13,7 @@ const database = require("./database");
 app.use(express.static("build"));
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');
+    res.header('Access-Control-Allow-Origin', "http://127.0.0.1:3000");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, csrf-token");
     res.header("Access-Control-Allow-Credentials", "true");
     next();
@@ -219,6 +219,15 @@ io.on("connection", async(socket) =>{
 
     socket.on("noVideo", room => {   
         io.to(room).emit("noVideo", userId );
+    });
+
+    socket.on("video", data => {
+        console.log(data.desc);
+        socket.to(data.room).emit("video", data.desc);
+    });
+
+    socket.on('new-ice-candidate', data => {console.log(data);
+        socket.to(data.room).emit("video", data);
     });
     
     socket.on("getPainting", async(room)=> { 
