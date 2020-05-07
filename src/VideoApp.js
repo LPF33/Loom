@@ -82,30 +82,7 @@ export default function AllVideos(props){
         if (localPeerConnection.connectionState === 'connected') {
             console.log("connected");
         }
-    });
-    
-
-    let remoteStream;
-
-    socket.on("audio/video", data => {
-        if(data.audio === "mute"){
-            remoteStream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = false;}
-            });
-        } else if(data.audio === "unmute"){
-            remoteStream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = true;}
-            });
-        } else if(data.video === "mute"){
-            remoteStream.getTracks().forEach(e => {
-                if (e.kind === 'video'){e.enabled = false;}
-            });
-        } else if(data.video === "unmute"){
-            remoteStream.getTracks().forEach(e => {
-                if (e.kind === 'video'){e.enabled = true;}
-            });
-        }
-    });
+    });  
 
     localPeerConnection.addEventListener('track', async (e) => {
         let remoteStream;
