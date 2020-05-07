@@ -62,7 +62,6 @@ export default function AllVideos(props){
             const desc = await localPeerConnection.createAnswer();
             await localPeerConnection.setLocalDescription(desc);            
             socket.emit('video', {room, desc});
-            makeCall();
         }
         if (data.candidate) {console.log("addIceCandidate",data.candidate);
             try {
@@ -95,6 +94,10 @@ export default function AllVideos(props){
         }
     }); 
 
+    socket.on("psp", () => {
+        setTimeout(makeCall,2000);
+    });
+
     useEffect(() => {
         if(!hideVideos){
             setClassVideo("hideVideos");
@@ -112,7 +115,7 @@ export default function AllVideos(props){
     },[myVideo]);
 
     useEffect(() => {
-        setTimeout(makeCall,3000);
+        setTimeout(makeCall,1500);
     },[]);
     
 
