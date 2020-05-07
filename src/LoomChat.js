@@ -24,7 +24,7 @@ export default function LoomChat(props){
     const [canvasVisible,setCanvasVisible] = useState(false);
     const [chatVisible,setChatVisible] = useState(false);
     const [allVideosVisible,setallVideosVisible] = useState(true);
-    const [mute, setMute] = useState(false);
+    const [mute, setMute] = useState(true);
     const [myVideo, setMyVideo] = useState(true);
     const [user, setUser] = useState(false);
     const [userOnline, setUserOnline] = useState(false);
