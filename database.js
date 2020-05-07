@@ -58,3 +58,14 @@ exports.deleteUser = userId => {
     return db.query('DELETE FROM loomchat WHERE id=$1;',
         [userId]);
 };
+
+exports.deleteRoom = room => {
+    db.query('DELETE FROM messages WHERE room=$1;', [room]);
+    db.query('DELETE FROM whiteboard WHERE room = $1;',[room]);
+    return db.query('DELETE FROM loomchat WHERE room=$1;',[room]);
+};
+
+exports.roomMembers = room => {
+    return db.query('SELECT COUNT(id) FROM loomchat WHERE room=$1;',
+        [room]);
+};

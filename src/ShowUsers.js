@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {useSelector} from "react-redux";
 import {socket} from "./sockets.js";
 import axios from "./axios";
+import {Link} from "react-router-dom";
 
 export default function ShowUsers(props){
 
@@ -13,11 +14,8 @@ export default function ShowUsers(props){
     const [explain, setExplain] = useState(false);
 
     const logout = async() => {        
-        const leave = await axios.post(`${serverUrl}/chatlogout`);
+        await axios.post(`${serverUrl}/chatlogout`);
         socket.emit("leaveChat"); 
-        if(leave.data.success){ 
-            window.location.replace("/");
-        }        
     };
 
     return(        
@@ -28,7 +26,9 @@ export default function ShowUsers(props){
                         {user.firstname} {user.lastname} <div id="point"></div>
                         {user.id === userId &&
                         <div>
-                            <div id="logout" onClick={logout} onMouseOver={()=> setExplain(true)} onMouseLeave={()=> setExplain(false)}></div> 
+                            <Link to="/"  onClick={logout} >
+                                <div id="logout" onMouseOver={()=> setExplain(true)} onMouseLeave={()=> setExplain(false)}></div> 
+                            </Link> 
                             {explain && <div id="logoutExplain">Leave LOOMchat</div>}
                         </div>}
                     </div>

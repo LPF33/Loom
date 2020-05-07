@@ -8,6 +8,7 @@ import Whiteboard from "./Whiteboard.js";
 import Chat from "./ChatApp";
 import AllVideos from "./VideoApp";
 import ShowUsers from "./ShowUsers";
+import {Link} from "react-router-dom";
 import {audio,video, hideVideos} from "./action";
 
 export default function LoomChat(props){
@@ -28,6 +29,7 @@ export default function LoomChat(props){
     const [myVideo, setMyVideo] = useState(true);
     const [user, setUser] = useState(false);
     const [userOnline, setUserOnline] = useState(false);
+    const [endSession, setEndSession] = useState(false);
 
     useEffect(()=> {
         const param = props.match.params.roomnumber;
@@ -37,6 +39,7 @@ export default function LoomChat(props){
             setUser(userData.data.user); 
             if(userData.data.user){
                 socket.emit("useronline", param);
+                socket.emit("countdown", param);
                 dispatch(oldChatMessages(userData.data.data));
             }            
         })();         
@@ -44,15 +47,30 @@ export default function LoomChat(props){
 
     const sendUserData = () => {
         (async() => {
-            const check = await axios.post(`${serverUrl}/startLoomChat`, {firstname,lastname,room});
-            if(check.data.success){
-                window.location.replace(`/loomChat/${room}`);
+            const checkRoomSize = await axios.get(`${serverUrl}/checkroomsize/${room}`);
+            if(checkRoomSize.data.exceeded){
+                setStatus(3);
             } else {
-                setStatus(2);
-                setError(check.data.error);
-            }                       
+                const check = await axios.post(`${serverUrl}/startLoomChat`, {firstname,lastname,room});
+                if(check.data.success){
+                    window.location.replace(`/loomChat/${room}`);
+                } else {
+                    setStatus(2);
+                    setError(check.data.error);
+                }
+            }
+                                   
         })(); 
     };
+
+    socket.on("endSession", () =>{
+        setEndSession(true);
+    });
+
+    socket.on("END", async() => {
+        await axios.post(`${serverUrl}/chatlogout`);
+        window.location.replace("/");
+    });
 
     useEffect(() => {
         dispatch(audio(mute));
@@ -65,9 +83,9 @@ export default function LoomChat(props){
     },[allVideosVisible]);
 
     return(
-        <div>
+        <div>            
             {!user && 
-            <div>                
+            <div>        
                 <div id="header">LOOM</div> 
                 <div id="noChatUser" className="flexColumn">
                     <div>
@@ -87,11 +105,18 @@ export default function LoomChat(props){
                             <div className="mailErrorChat">{error}</div>
                             <button type="button" onClick={() => setStatus(1)} className="welcomeButton2">Go back</button>
                         </div>
-                    }                    
+                    }
+                    {status===3 && 
+                    <div className="flexColumn">
+                        <h4>Sorry,you cannot enter this room.</h4> 
+                        <h4>The number of <em>LOOMers</em> has been exceeded!</h4>  
+                        <Link to="/" className="noentry">Go to main</Link>
+                    </div>                    
+                    }                     
                 </div>                
             </div>
             }
-            {user &&
+            {user && 
             <div>
                 <AllVideos room={room}/>
 
@@ -100,6 +125,8 @@ export default function LoomChat(props){
                 {canvasVisible && <Whiteboard room={room}/>}   
 
                 {userOnline && <ShowUsers userId={user.id}/>}
+
+                {endSession && <div id="endSession">This session ends in 2 minutes!</div>}
 
                 <div id="menu" className="flex">    
                     {!userOnline && <div id="online" onClick={()=>setUserOnline(true)}></div>}

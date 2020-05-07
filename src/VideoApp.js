@@ -85,7 +85,7 @@ export default function AllVideos(props){
     });
     
 
-    localPeerConnection.addEventListener('track', async (e) => {console.log("es kommen daten", e);
+    localPeerConnection.addEventListener('track', async (e) => {
         if (e.streams && e.streams[0]) {
             videoElement2.current.srcObject = e.streams[0];
         } else {

@@ -15,6 +15,30 @@
     cursor: none;
 }
 
+h4{
+    text-align: center;
+    background-color: rgb(250, 176, 246);
+    font-size: 1.5vw;
+    border-radius: 10px;
+    padding: 4px;
+    margin: 15px 0;
+}
+
+em{
+    color: white;
+    text-shadow: 10px 10px 10px rgb(255, 217, 0), -10px -10px 10px rgb(255, 217, 0);
+}
+
+.noentry{
+    color: white;
+    text-decoration: none;
+    font-size: 1.5vw;
+    background-color: black;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 h5 {
     text-align: center;
     background-color: rgb(255, 255, 151);
@@ -229,6 +253,7 @@ h5 {
     background-color: black;
     border-radius: 10px;
     cursor: pointer;
+    outline: none;
 }
 
 #mute2{
@@ -240,6 +265,7 @@ h5 {
     background-color: red;
     border-radius: 10px;
     cursor: pointer;
+    outline: none;
 }
 
 #video1{
@@ -253,6 +279,7 @@ h5 {
     border-radius: 10px;
     margin-left: 20px;
     cursor: pointer;
+    outline: none;
 }
 
 #video2{
@@ -266,6 +293,7 @@ h5 {
     border-radius: 10px;
     margin-left: 20px;
     cursor: pointer;
+    outline: none;
 }
 
 .hideVideos{
@@ -274,6 +302,26 @@ h5 {
 
 .userVideos{
     width: 16vw;
+}
+
+#endSession {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: rgb(250, 126, 126);
+    font-size: 2vw;
+    font-weight: bold;
+    border: 3px solid black;
+    padding: 20px;
+    z-index:10;
+    animation: endSessionDisappear 3s  10s 1 forwards;
+}
+
+@keyframes endSessionDisappear {
+    100%{
+        left: -50%;
+    }
 }
 
 

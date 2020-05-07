@@ -136,6 +136,22 @@ app.post("/invitationBattleship", async (request, response) => {
     }  
 });
 
+app.get("/checkroomsize/:room", async(request, response) => {
+    const {room} = request.params;
+    const count = await database.roomMembers(room);
+    const roomSize = count.rows[0].count;
+
+    if(roomSize>1){
+        response.json({
+            exceeded:true
+        });
+    } else {
+        response.json({
+            exceeded:false
+        });
+    }    
+});
+
 app.post("/startLoomChat", async(request, response) => { 
     const {firstname,lastname,room} = request.body;
     if(!firstname || !lastname){
@@ -145,7 +161,7 @@ app.post("/startLoomChat", async(request, response) => {
         });
     } else {
         const userId = await database.insertChatUser(firstname,lastname,room);
-        request.session.userId = userId.rows[0].id;
+        request.session.userId = userId.rows[0].id; console.log(room);
         request.session.room = room; 
         response.json({
             success: true
@@ -156,7 +172,7 @@ app.post("/startLoomChat", async(request, response) => {
 
 app.get("/getChatUser/:room", async(request, response) => {
     const {room} = request.params;
-    const check = room === request.session.room; 
+    const check = room === request.session.room; console.log(request.session.room,check, request.session.userId);
     if(!request.session.userId || !check){
         response.json({
             user: false
@@ -192,7 +208,28 @@ io.on("connection", async(socket) =>{
     if(!socket.request.session.userId){
         console.log("User is not connected");
         return socket.disconnect(true);
-    }   
+    }  
+
+    socket.on("countdown", room => {
+        const roomData = io.sockets.adapter.rooms[room];
+        const roomMembers = roomData.length;
+
+        const deleteRoom = async() => {
+            io.to(room).emit("END");
+            setTimeout(async() => {
+                await database.deleteRoom(room);
+            },2000);            
+        };
+
+        const endSession = () => {
+            io.to(room).emit("endSession");
+            setTimeout(deleteRoom,120000);
+        };
+
+        if(roomMembers===1){
+            setTimeout(endSession,1000);
+        } 
+    });
 
     socket.on("useronline", async(room) => { 
         socket.join(room);
@@ -211,11 +248,10 @@ io.on("connection", async(socket) =>{
     });    
     
     socket.on("video", data => {
-        console.log(data);
         socket.to(data.room).emit("video", data.desc);
     });
 
-    socket.on('new-ice-candidate', data => {console.log(data);
+    socket.on('new-ice-candidate', data => {;
         socket.to(data.room).emit("video", data);
     });
     
