@@ -161,7 +161,7 @@ app.post("/startLoomChat", async(request, response) => {
         });
     } else {
         const userId = await database.insertChatUser(firstname,lastname,room);
-        request.session.userId = userId.rows[0].id; console.log(room);
+        request.session.userId = userId.rows[0].id; 
         request.session.room = room; 
         response.json({
             success: true
@@ -172,7 +172,7 @@ app.post("/startLoomChat", async(request, response) => {
 
 app.get("/getChatUser/:room", async(request, response) => {
     const {room} = request.params;
-    const check = room === request.session.room; console.log(request.session.room,check, request.session.userId);
+    const check = room === request.session.room; 
     if(!request.session.userId || !check){
         response.json({
             user: false
@@ -206,7 +206,6 @@ io.on("connection", async(socket) =>{
     const userId = socket.request.session.userId;
     
     if(!socket.request.session.userId){
-        console.log("User is not connected");
         return socket.disconnect(true);
     }  
 

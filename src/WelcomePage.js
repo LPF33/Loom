@@ -101,8 +101,10 @@ export default function Welcome(){
                 <div>
                     {statusChat!==2 &&
                     <div className="flex">
-                        <h2>Send this link to your friends:</h2>
-                        <div className="battleshipLink">{link1}</div>                        
+                        <div>
+                            <h2>Send this link to your friends:</h2>
+                            <div className="battleshipLink">{link1}</div> 
+                        </div>                       
                         <button className="welcomeButton2" type="button" onClick={changeRouting}>Start</button>
                     </div>  
                     }                  
