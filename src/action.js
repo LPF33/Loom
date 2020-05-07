@@ -19,16 +19,16 @@ export function showUser(user){
     };
 }
 
-export function showVideo(video){
+export function audio(data){
     return {
-        type: "showVideo",
-        data: video
+        type: "mute",
+        data: data
     };
 }
 
-export function notMyVideo(data){
-    return{
-        type: "notMyVideo",
+export function video(data){
+    return {
+        type: "video",
         data: data
     };
 }

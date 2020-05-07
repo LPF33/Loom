@@ -25,25 +25,24 @@ export default function (state = {}, action) {
             ...state,
             UserOnline : action.data.user
         };
-    }
+    }    
 
-    if(action.type === "showVideo"){
-        const UserVideo = state.UserVideo ? {...state.UserVideo, [action.data.id] : action.data.data} : {[action.data.id] : action.data.data};
+    if(action.type === "mute"){
 
         state = {
             ...state,
-            UserVideo
+            audio: action.data
         };
+
     }
 
-    if(action.type === "notMyVideo"){ 
-        delete state.UserVideo[action.data];
-        const data = state.UserVideo.length >= 1 ? state.UserVideo : null; 
+    if(action.type === "video"){
 
-        state={
+        state = {
             ...state,
-            UserVideo: data
+            video: action.data
         };
+
     }
 
     return state;

@@ -217,23 +217,52 @@ h5 {
     position: absolute;
     top:0;
     right: 0;
-    max-width: 80%;
-    height: 15vh;
-    background-color: white;
-}
-
-#chatMyVideo video{
     width: 16vw;
 }
 
-#canvasVideo {
-    display: none;
+#mute1{
+    width: 2.9vw;
+    height: 2.9vw;
+    background-image: url("./pics/mutewhite.png");
+    background-size: 2.7vw;
+    background-position: center;
+    background-color: black;
+    border-radius: 10px;
 }
 
-#usersVideo{
-    width: 80vw;
-    overflow-x: auto;
+#mute2{
+    width: 2.9vw;
+    height: 2.9vw;
+    background-image: url("./pics/mute1.png");
+    background-size: 2.7vw;
+    background-position: center;
+    background-color: red;
+    border-radius: 10px;
 }
-.usersVideo{
-    width: 16vw;
+
+#video1{
+    width: 2.9vw;
+    height: 2.9vw;
+    background-image: url("./pics/cameraOff.png");
+    background-size: 2.5vw;
+    background-position: center;
+    background-color: black;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    margin-left: 20px;
 }
+
+#video2{
+    width: 2.9vw;
+    height: 2.9vw;
+    background-image: url("./pics/camera.png");
+    background-size: 2.5vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: red;
+    border-radius: 10px;
+    margin-left: 20px;
+}
+
+
+

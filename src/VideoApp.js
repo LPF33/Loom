@@ -1,4 +1,5 @@
-import React, {useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef} from "react";
+import {useSelector} from "react-redux";
 import {socket} from "./sockets.js";
 
 export default function AllVideos(props){
@@ -8,7 +9,9 @@ export default function AllVideos(props){
     const videoElement = useRef();
     const videoElement2 = useRef();
 
-    const mediaConstraints = {audio:true, video: {width: 350, height: 200}};
+    const audio = useSelector(state => state.audio);
+    const myVideo = useSelector(state => state.video);
+    const mediaConstraints = {audio: audio, video: myVideo};
 
     let localPeerConnection = new RTCPeerConnection();
     let stream;  
@@ -71,12 +74,12 @@ export default function AllVideos(props){
 
     useEffect(() => {
         getVideo();
-    },[]);
+    },[mediaConstraints]);
 
     return(
         <div id="usersVideo">
             <button type="button" onClick={makeCall}>Connect</button>
-            <video ref={videoElement} autoPlay></video>
+            <video id="chatMyVideo" ref={videoElement} autoPlay></video>
             <video ref={videoElement2} autoPlay></video>
         </div>
     );

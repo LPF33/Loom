@@ -209,18 +209,7 @@ io.on("connection", async(socket) =>{
             lastname
         });
     });    
-
-    socket.on("showVideo", data => {         
-        io.to(data.room).emit("showVideo",{
-            data: data.data,
-            id: userId
-        });
-    });
-
-    socket.on("noVideo", room => {   
-        io.to(room).emit("noVideo", userId );
-    });
-
+    
     socket.on("video", data => {
         console.log(data);
         socket.to(data.room).emit("video", data.desc);

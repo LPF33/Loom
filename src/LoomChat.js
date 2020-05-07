@@ -8,11 +8,12 @@ import Whiteboard from "./Whiteboard.js";
 import Chat from "./ChatApp";
 import AllVideos from "./VideoApp";
 import ShowUsers from "./ShowUsers";
+import {audio,video} from "./action";
 
 export default function LoomChat(props){
 
-    const serverUrl = 'https://loomchat.herokuapp.com';
-    //const serverUrl =  "http://127.0.0.1:8080";
+    //const serverUrl = 'https://loomchat.herokuapp.com';
+    const serverUrl =  "http://127.0.0.1:8080";
     const dispatch = useDispatch();
 
     const [room, setRoom] = useState("");
@@ -23,6 +24,8 @@ export default function LoomChat(props){
     const [canvasVisible,setCanvasVisible] = useState(false);
     const [chatVisible,setChatVisible] = useState(false);
     const [allVideosVisible,setallVideosVisible] = useState(true);
+    const [mute, setMute] = useState(false);
+    const [myVideo, setMyVideo] = useState({width: 350, height: 200});
     const [user, setUser] = useState(false);
     const [userOnline, setUserOnline] = useState(false);
 
@@ -50,6 +53,13 @@ export default function LoomChat(props){
             }                       
         })(); 
     };
+
+    useEffect(() => {
+        dispatch(audio(mute));
+    },[mute]);
+    useEffect(() => {
+        dispatch(video(myVideo));
+    },[myVideo]);
 
     return(
         <div>
@@ -80,7 +90,7 @@ export default function LoomChat(props){
             }
             {user &&
             <div>
-                {allVideosVisible && <AllVideos room={room}/>}
+                <AllVideos room={room}/>
 
                 {chatVisible && <Chat user={user} room={room}/>}
 
@@ -99,6 +109,12 @@ export default function LoomChat(props){
                             setChatVisible(true);
                         }
                     }}>Chat</button>
+                    <div>
+                        {mute && <button id="mute2" type="button" onClick={()=> {if(myVideo){setMute(false);}}}></button>}
+                        {!mute && <button id="mute1" type="button" onClick={()=> setMute(true)}></button>}
+                        {myVideo && <button id="video2" type="button" onClick={()=> {if(mute){setMyVideo(false);}}}></button>}
+                        {!myVideo && <button id="video1" type="button" onClick={()=> setMyVideo({width: 350, height: 200})}></button>}
+                    </div>
                     {allVideosVisible && <button className="chatButton" type="button" onClick={()=> setallVideosVisible(false)}>Hide Videos</button>}
                     {!allVideosVisible && <button className="chatButtonred" type="button" onClick={()=> setallVideosVisible(true)}>Show Videos</button>}
                     <button className="chatButton" type="button" onClick={()=> {
