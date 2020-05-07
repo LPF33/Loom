@@ -139,10 +139,6 @@ export default function AllVideos(props){
         });
     }); 
 
-    socket.on("p2p", () => {console.log("p2p");
-        makeCall();
-    });
-
     useEffect(() => {
         if(!hideVideos){
             setClassVideo("hideVideos");

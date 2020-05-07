@@ -233,7 +233,6 @@ io.on("connection", async(socket) =>{
     socket.on("useronline", async(room) => { 
         socket.join(room);
         const allUsers = await database.getChatUsers(room);
-        io.to(room).emit("p2p"); 
         io.to(room).emit("useronline", {user:allUsers.rows});     
     });       
 
