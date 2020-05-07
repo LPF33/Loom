@@ -260,6 +260,10 @@ io.on("connection", async(socket) =>{
         socket.emit("painting", whiteboard.rows[0]);  
     });
 
+    socket.on("audio/video", data => {
+        socket.emit("audio/video", data);
+    });
+
     socket.on("painting", async(data) => { 
         socket.to(data.room).emit("painting", data);
         await database.storeWhiteboard(data.room, data.painting);        

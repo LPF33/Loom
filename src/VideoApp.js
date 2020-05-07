@@ -25,20 +25,20 @@ export default function AllVideos(props){
         videoElement.current.srcObject = stream;         
         if(!audio){
             stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = false;}
+                if (e.kind === 'audio'){e.enabled = false; socket.emit("audio/video", {audio:"mute"});}
             });
         } else{
             stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = true;} 
+                if (e.kind === 'audio'){e.enabled = true;socket.emit("audio/video", {audio:"unmute"});} 
             });
         }
         if(!myVideo){
             stream.getTracks().forEach(e => {
-                if (e.kind === 'video'){e.enabled = false;}
+                if (e.kind === 'video'){e.enabled = false;socket.emit("audio/video", {video:"mute"});}
             });
         } else{
             stream.getTracks().forEach(e => {
-                if (e.kind === 'video'){e.enabled = true;} 
+                if (e.kind === 'video'){e.enabled = true;socket.emit("audio/video", {video:"unmute"});} 
             });
         }
         stream.getTracks().forEach(track => { 
@@ -85,17 +85,40 @@ export default function AllVideos(props){
     });
     
 
+    let remoteStream;
+
+    socket.on("audio/video", data => {
+        if(data.audio === "mute"){
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'audio'){e.enabled = false;}
+            });
+        } else if(data.audio === "unmute"){
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'audio'){e.enabled = true;}
+            });
+        } else if(data.video === "mute"){
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'video'){e.enabled = false;}
+            });
+        } else if(data.video === "unmute"){
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'video'){e.enabled = true;}
+            });
+        }
+    });
+
     localPeerConnection.addEventListener('track', async (e) => {
         if (e.streams && e.streams[0]) {
+            remoteStream = e.streams[0];
             videoElement2.current.srcObject = e.streams[0];
         } else {
-            let inboundStream = new MediaStream(e.track);
-            videoElement2.current.srcObject = inboundStream;
+            remoteStream = new MediaStream(e.track);
+            videoElement2.current.srcObject = remoteStream;
         }
     }); 
 
-    socket.on("p2p", () => {
-        setTimeout(makeCall,6000);
+    socket.on("p2p", () => {console.log("p2p");
+        makeCall();
     });
 
     useEffect(() => {
