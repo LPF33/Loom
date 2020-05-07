@@ -15,7 +15,9 @@ export default function AllVideos(props){
     const audio = useSelector(state => state.audio);
     const myVideo = useSelector(state => state.video);
 
-    let localPeerConnection = new RTCPeerConnection();
+    const stunServer = {iceServers : [{urls : 'stun.l.google.com:19302'}]};
+
+    let localPeerConnection = new RTCPeerConnection(stunServer);
     let stream;  
 
     const getVideo = async() => {
@@ -39,7 +41,7 @@ export default function AllVideos(props){
                 if (e.kind === 'video'){e.enabled = true;} 
             });
         }
-        stream.getTracks().forEach(track => { console.log(track);
+        stream.getTracks().forEach(track => { 
             localPeerConnection.addTrack(track, stream);
         });
     };

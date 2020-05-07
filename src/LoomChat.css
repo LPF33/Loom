@@ -228,6 +228,7 @@ h5 {
     background-position: center;
     background-color: black;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 #mute2{
@@ -238,6 +239,7 @@ h5 {
     background-position: center;
     background-color: red;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 #video1{
@@ -250,6 +252,7 @@ h5 {
     background-repeat: no-repeat;
     border-radius: 10px;
     margin-left: 20px;
+    cursor: pointer;
 }
 
 #video2{
@@ -262,6 +265,7 @@ h5 {
     background-color: red;
     border-radius: 10px;
     margin-left: 20px;
+    cursor: pointer;
 }
 
 .hideVideos{

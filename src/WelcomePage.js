@@ -84,8 +84,9 @@ export default function Welcome(){
     };
   
     return(        
-        <div>            
+        <div>                        
             <div id="header">LOOM</div>   
+            <div id="header2">Connect &amp; Chat</div>
             <div id="loomChat">
                 <div>
                     <div className="loomChatHeadline">Video &amp; Chat &amp; Whiteboard</div>
