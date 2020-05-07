@@ -15,7 +15,7 @@ export default function AllVideos(props){
     const audio = useSelector(state => state.audio);
     const myVideo = useSelector(state => state.video);
 
-    const stunServer = {iceServers : [{urls : 'stun.l.google.com:19302'}]};
+    const stunServer = {'iceServers' : [{'urls' : 'stun:stun.l.google.com:19302'}]};
 
     let localPeerConnection = new RTCPeerConnection(stunServer);
     let stream;  
