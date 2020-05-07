@@ -94,7 +94,7 @@ export default function AllVideos(props){
         }
     }); 
 
-    socket.on("psp", () => {
+    socket.on("p2p", () => {
         setTimeout(makeCall,6000);
     });
 
