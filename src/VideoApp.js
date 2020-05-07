@@ -62,6 +62,7 @@ export default function AllVideos(props){
             const desc = await localPeerConnection.createAnswer();
             await localPeerConnection.setLocalDescription(desc);            
             socket.emit('video', {room, desc});
+            makeCall();
         }
         if (data.candidate) {console.log("addIceCandidate",data.candidate);
             try {
@@ -111,7 +112,7 @@ export default function AllVideos(props){
     },[myVideo]);
 
     useEffect(() => {
-        setTimeout(makeCall,5000);
+        setTimeout(makeCall,3000);
     },[]);
     
 
