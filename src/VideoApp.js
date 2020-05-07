@@ -1,20 +1,21 @@
 import React, {useEffect, useRef} from "react";
 import {socket} from "./sockets.js";
 
-export default function Video(props){
+export default function AllVideos(props){
 
     const {room} = props;
-    const mediaConstraints = {audio:true, video: {width: 350, height: 200}};
 
-    const videoElem = useRef();
-    const videoElem2 = useRef();
+    const videoElement = useRef();
+    const videoElement2 = useRef();
+
+    const mediaConstraints = {audio:true, video: {width: 350, height: 200}};
 
     let localPeerConnection = new RTCPeerConnection();
     let stream;  
 
     const getVideo = async() => {
         stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);        
-        videoElem2.current.srcObject = stream; 
+        videoElement.current.srcObject = stream; 
         stream.getTracks().forEach(track => {
             localPeerConnection.addTrack(track, stream);
         }); 
@@ -57,28 +58,26 @@ export default function Video(props){
             console.log("connected");
         }
     });
-
-    //const remoteStream = new MediaStream();    
+    
 
     localPeerConnection.addEventListener('track', async (e) => {console.log("es kommen daten", e);
         if (e.streams && e.streams[0]) {
-            videoElem.current.srcObject = e.streams[0];
+            videoElement2.current.srcObject = e.streams[0];
         } else {
             let inboundStream = new MediaStream(e.track);
-            videoElem.current.srcObject = inboundStream;
+            videoElement2.current.srcObject = inboundStream;
         }
     }); 
 
     useEffect(() => {
-        getVideo();        
+        getVideo();
     },[]);
-    
 
     return(
-        <div>
+        <div id="usersVideo">
             <button type="button" onClick={makeCall}>Connect</button>
-            <video ref={videoElem} autoPlay></video>
-            <video ref={videoElem2} autoPlay></video>
+            <video ref={videoElement} autoPlay></video>
+            <video ref={videoElement2} autoPlay></video>
         </div>
     );
 }

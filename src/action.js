@@ -26,13 +26,6 @@ export function showVideo(video){
     };
 }
 
-export function stopMyVideo(videoVisible){
-    return{
-        type: "stopMyVideo",
-        data: videoVisible
-    };
-}
-
 export function notMyVideo(data){
     return{
         type: "notMyVideo",

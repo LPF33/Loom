@@ -3,11 +3,10 @@ import {useDispatch} from "react-redux";
 import "./LoomChat.css";
 import {socket} from "./sockets.js";
 import axios from "./axios.js";
-import {stopMyVideo, oldChatMessages} from "./action.js";
+import {oldChatMessages} from "./action.js";
 import Whiteboard from "./Whiteboard.js";
 import Chat from "./ChatApp";
-import Video from "./MyVideo";
-import AllVideos from "./AllUserVideos";
+import AllVideos from "./VideoApp";
 import ShowUsers from "./ShowUsers";
 
 export default function LoomChat(props){
@@ -22,7 +21,6 @@ export default function LoomChat(props){
     const [error, setError] = useState("");
     const [canvasVisible,setCanvasVisible] = useState(false);
     const [chatVisible,setChatVisible] = useState(false);
-    const [videoVisible,setVideoVisible] = useState(false);
     const [allVideosVisible,setallVideosVisible] = useState(true);
     const [user, setUser] = useState(false);
     const [userOnline, setUserOnline] = useState(false);
@@ -39,10 +37,6 @@ export default function LoomChat(props){
             }            
         })();         
     },[props.match]);
-
-    useEffect(() => {
-        dispatch(stopMyVideo(videoVisible));
-    },[videoVisible]);
 
     const sendUserData = () => {
         (async() => {
@@ -85,8 +79,7 @@ export default function LoomChat(props){
             }
             {user &&
             <div>
-                {videoVisible && <Video room={room}/>}
-                {allVideosVisible && <AllVideos />}
+                {allVideosVisible && <AllVideos room={room}/>}
 
                 {chatVisible && <Chat user={user} room={room}/>}
 
@@ -105,8 +98,6 @@ export default function LoomChat(props){
                             setChatVisible(true);
                         }
                     }}>Chat</button>
-                    {videoVisible && <button className="chatButtonred" type="button" onClick={()=> setVideoVisible(false)}>MyCam - OFF</button>}
-                    {!videoVisible && <button className="chatButton" type="button" onClick={()=> setVideoVisible(true)}>MyCam - ON</button>}
                     {allVideosVisible && <button className="chatButton" type="button" onClick={()=> setallVideosVisible(false)}>Hide Videos</button>}
                     {!allVideosVisible && <button className="chatButtonred" type="button" onClick={()=> setallVideosVisible(true)}>Show Videos</button>}
                     <button className="chatButton" type="button" onClick={()=> {

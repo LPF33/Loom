@@ -222,7 +222,7 @@ io.on("connection", async(socket) =>{
     });
 
     socket.on("video", data => {
-        console.log(data.desc);
+        console.log(data);
         socket.to(data.room).emit("video", data.desc);
     });
 

@@ -36,15 +36,6 @@ export default function (state = {}, action) {
         };
     }
 
-    if(action.type === "stopMyVideo"){
-        const videoVisible = action.data;
-
-        state={
-            ...state,
-            videoVisible
-        };
-    }
-
     if(action.type === "notMyVideo"){ 
         delete state.UserVideo[action.data];
         const data = state.UserVideo.length >= 1 ? state.UserVideo : null; 
