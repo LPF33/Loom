@@ -8,12 +8,12 @@ import Whiteboard from "./Whiteboard.js";
 import Chat from "./ChatApp";
 import AllVideos from "./VideoApp";
 import ShowUsers from "./ShowUsers";
-import {audio,video} from "./action";
+import {audio,video, hideVideos} from "./action";
 
 export default function LoomChat(props){
 
-    //const serverUrl = 'https://loomchat.herokuapp.com';
-    const serverUrl =  "http://127.0.0.1:8080";
+    const serverUrl = 'https://loomchat.herokuapp.com';
+    //const serverUrl =  "http://127.0.0.1:8080";
     const dispatch = useDispatch();
 
     const [room, setRoom] = useState("");
@@ -60,6 +60,9 @@ export default function LoomChat(props){
     useEffect(() => {
         dispatch(video(myVideo));
     },[myVideo]);
+    useEffect(() => {
+        dispatch(hideVideos(allVideosVisible));
+    },[allVideosVisible]);
 
     return(
         <div>

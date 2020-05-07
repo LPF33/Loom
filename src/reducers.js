@@ -45,5 +45,14 @@ export default function (state = {}, action) {
 
     }
 
+    if(action.type === "hideVideos"){
+
+        state = {
+            ...state,
+            hideVideos: action.data
+        };
+
+    }
+
     return state;
 }

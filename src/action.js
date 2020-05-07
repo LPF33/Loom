@@ -33,4 +33,11 @@ export function video(data){
     };
 }
 
+export function hideVideos(data){
+    return{
+        type: "hideVideos",
+        data: data
+    };
+}
+
 

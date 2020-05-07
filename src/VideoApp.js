@@ -9,6 +9,9 @@ export default function AllVideos(props){
     const videoElement = useRef();
     const videoElement2 = useRef();
 
+    const hideVideos = useSelector(state => state.hideVideos);
+    const [classVideo, setClassVideo] = useState("");
+
     const audio = useSelector(state => state.audio);
     const myVideo = useSelector(state => state.video);
     const mediaConstraints = {audio: audio, video: myVideo};
@@ -56,7 +59,7 @@ export default function AllVideos(props){
         }
     });
 
-    localPeerConnection.addEventListener('connectionstatechange', event => {
+    localPeerConnection.addEventListener('connectionstatechange', () => {
         if (localPeerConnection.connectionState === 'connected') {
             console.log("connected");
         }
@@ -76,11 +79,24 @@ export default function AllVideos(props){
         getVideo();
     },[mediaConstraints]);
 
+    useEffect(() => {
+        if(!hideVideos){
+            setClassVideo("hideVideos");
+        } else {
+            setClassVideo("");
+        }
+    },[hideVideos]);
+
+    useEffect(() => {
+        setTimeout(makeCall,3000);
+    },[]);
+
     return(
         <div id="usersVideo">
-            <button type="button" onClick={makeCall}>Connect</button>
-            <video id="chatMyVideo" ref={videoElement} autoPlay></video>
-            <video ref={videoElement2} autoPlay></video>
+            <div className={classVideo}>
+                <video id="chatMyVideo" ref={videoElement} autoPlay></video>
+                <video className="userVideos" ref={videoElement2} autoPlay></video>
+            </div>
         </div>
     );
 }

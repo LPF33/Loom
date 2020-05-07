@@ -264,5 +264,13 @@ h5 {
     margin-left: 20px;
 }
 
+.hideVideos{
+    visibility: hidden;
+}
+
+.userVideos{
+    width: 16vw;
+}
+
 
 
