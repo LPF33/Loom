@@ -95,7 +95,7 @@ export default function AllVideos(props){
     }); 
 
     socket.on("psp", () => {
-        setTimeout(makeCall,2000);
+        setTimeout(makeCall,4000);
     });
 
     useEffect(() => {
@@ -115,7 +115,7 @@ export default function AllVideos(props){
     },[myVideo]);
 
     useEffect(() => {
-        setTimeout(makeCall,1500);
+        setTimeout(makeCall,3000);
     },[]);
     
 
