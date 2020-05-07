@@ -15,9 +15,9 @@ export default function AllVideos(props){
     const audio = useSelector(state => state.audio);
     const myVideo = useSelector(state => state.video);
 
-    //const stunServer = {'iceServers' : [{'urls' : 'stun:stun.l.google.com:19302'}]};
+    const stunServer = {'iceServers' : [{'urls' : 'stun:stun.l.google.com:19302'}]};
 
-    let localPeerConnection = new RTCPeerConnection();
+    let localPeerConnection = new RTCPeerConnection(stunServer);
     let stream;  
 
     const getVideo = async() => {
@@ -108,6 +108,8 @@ export default function AllVideos(props){
     });
 
     localPeerConnection.addEventListener('track', async (e) => {
+        let remoteStream;
+        
         if (e.streams && e.streams[0]) {
             remoteStream = e.streams[0];
             videoElement2.current.srcObject = e.streams[0];
@@ -115,6 +117,26 @@ export default function AllVideos(props){
             remoteStream = new MediaStream(e.track);
             videoElement2.current.srcObject = remoteStream;
         }
+
+        socket.on("audio/video", data => {console.log("audio/video", data);
+            if(data.audio === "mute"){
+                remoteStream.getTracks().forEach(e => {
+                    if (e.kind === 'audio'){e.enabled = false;}
+                });
+            } else if(data.audio === "unmute"){
+                remoteStream.getTracks().forEach(e => {
+                    if (e.kind === 'audio'){e.enabled = true;}
+                });
+            } else if(data.video === "mute"){
+                remoteStream.getTracks().forEach(e => {
+                    if (e.kind === 'video'){e.enabled = false;}
+                });
+            } else if(data.video === "unmute"){
+                remoteStream.getTracks().forEach(e => {
+                    if (e.kind === 'video'){e.enabled = true;}
+                });
+            }
+        });
     }); 
 
     socket.on("p2p", () => {console.log("p2p");

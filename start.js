@@ -226,7 +226,7 @@ io.on("connection", async(socket) =>{
         };
 
         if(roomMembers===1){
-            setTimeout(endSession,1000);
+            setTimeout(endSession,10000);
         } 
     });
 
