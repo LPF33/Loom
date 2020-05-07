@@ -14,17 +14,34 @@ export default function AllVideos(props){
 
     const audio = useSelector(state => state.audio);
     const myVideo = useSelector(state => state.video);
-    const mediaConstraints = {audio: audio, video: myVideo};
 
     let localPeerConnection = new RTCPeerConnection();
     let stream;  
 
     const getVideo = async() => {
-        stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);        
-        videoElement.current.srcObject = stream; 
-        stream.getTracks().forEach(track => {
+        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: {width: 350, height: 200}});        
+        videoElement.current.srcObject = stream;         
+        if(!audio){
+            stream.getTracks().forEach(e => {
+                if (e.kind === 'audio'){e.enabled = false;}
+            });
+        } else{
+            stream.getTracks().forEach(e => {
+                if (e.kind === 'audio'){e.enabled = true;} 
+            });
+        }
+        if(!myVideo){
+            stream.getTracks().forEach(e => {
+                if (e.kind === 'video'){e.enabled = false;}
+            });
+        } else{
+            stream.getTracks().forEach(e => {
+                if (e.kind === 'video'){e.enabled = true;} 
+            });
+        }
+        stream.getTracks().forEach(track => { console.log(track);
             localPeerConnection.addTrack(track, stream);
-        }); 
+        });
     };
 
     const makeCall = async() => {   
@@ -76,10 +93,6 @@ export default function AllVideos(props){
     }); 
 
     useEffect(() => {
-        getVideo();
-    },[mediaConstraints]);
-
-    useEffect(() => {
         if(!hideVideos){
             setClassVideo("hideVideos");
         } else {
@@ -88,8 +101,17 @@ export default function AllVideos(props){
     },[hideVideos]);
 
     useEffect(() => {
+        getVideo();
+    },[audio]);
+
+    useEffect(() => {
+        getVideo();
+    },[myVideo]);
+
+    useEffect(() => {
         setTimeout(makeCall,3000);
     },[]);
+    
 
     return(
         <div id="usersVideo">

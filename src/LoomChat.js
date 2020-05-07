@@ -25,7 +25,7 @@ export default function LoomChat(props){
     const [chatVisible,setChatVisible] = useState(false);
     const [allVideosVisible,setallVideosVisible] = useState(true);
     const [mute, setMute] = useState(false);
-    const [myVideo, setMyVideo] = useState({width: 350, height: 200});
+    const [myVideo, setMyVideo] = useState(true);
     const [user, setUser] = useState(false);
     const [userOnline, setUserOnline] = useState(false);
 
@@ -113,10 +113,10 @@ export default function LoomChat(props){
                         }
                     }}>Chat</button>
                     <div>
-                        {mute && <button id="mute2" type="button" onClick={()=> {if(myVideo){setMute(false);}}}></button>}
+                        {mute && <button id="mute2" type="button" onClick={()=> setMute(false)}></button>}
                         {!mute && <button id="mute1" type="button" onClick={()=> setMute(true)}></button>}
-                        {myVideo && <button id="video2" type="button" onClick={()=> {if(mute){setMyVideo(false);}}}></button>}
-                        {!myVideo && <button id="video1" type="button" onClick={()=> setMyVideo({width: 350, height: 200})}></button>}
+                        {myVideo && <button id="video2" type="button" onClick={()=> setMyVideo(false)}></button>}
+                        {!myVideo && <button id="video1" type="button" onClick={()=> setMyVideo(true)}></button>}
                     </div>
                     {allVideosVisible && <button className="chatButton" type="button" onClick={()=> setallVideosVisible(false)}>Hide Videos</button>}
                     {!allVideosVisible && <button className="chatButtonred" type="button" onClick={()=> setallVideosVisible(true)}>Show Videos</button>}
