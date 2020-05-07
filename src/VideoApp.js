@@ -111,7 +111,7 @@ export default function AllVideos(props){
     },[myVideo]);
 
     useEffect(() => {
-        setTimeout(makeCall,3000);
+        setTimeout(makeCall,5000);
     },[]);
     
 
