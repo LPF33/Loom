@@ -25,20 +25,20 @@ export default function AllVideos(props){
         videoElement.current.srcObject = stream;         
         if(!audio){
             stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = false; socket.emit("audio/video", {audio:"mute"});}
+                if (e.kind === 'audio'){e.enabled = false; socket.emit("audio/video", {room, audio:"unmute"});}
             });
         } else{
             stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = true;socket.emit("audio/video", {audio:"unmute"});} 
+                if (e.kind === 'audio'){e.enabled = true;socket.emit("audio/video", {room,audio:"mute"});} 
             });
         }
         if(!myVideo){
             stream.getTracks().forEach(e => {
-                if (e.kind === 'video'){e.enabled = false;socket.emit("audio/video", {video:"mute"});}
+                if (e.kind === 'video'){e.enabled = false;socket.emit("audio/video", {room,video:"unmute"});}
             });
         } else{
             stream.getTracks().forEach(e => {
-                if (e.kind === 'video'){e.enabled = true;socket.emit("audio/video", {video:"unmute"});} 
+                if (e.kind === 'video'){e.enabled = true;socket.emit("audio/video", {room,video:"mute"});} 
             });
         }
         stream.getTracks().forEach(track => { 
@@ -83,9 +83,9 @@ export default function AllVideos(props){
             console.log("connected");
         }
     });  
+    let remoteStream  = null;
 
-    localPeerConnection.addEventListener('track', async (e) => {
-        let remoteStream;
+    localPeerConnection.addEventListener('track', async (e) => {        
         
         if (e.streams && e.streams[0]) {
             remoteStream = e.streams[0];
@@ -93,28 +93,28 @@ export default function AllVideos(props){
         } else {
             remoteStream = new MediaStream(e.track);
             videoElement2.current.srcObject = remoteStream;
-        }
-
-        socket.on("audio/video", data => {console.log("audio/video", data);
-            if(data.audio === "mute"){
-                remoteStream.getTracks().forEach(e => {
-                    if (e.kind === 'audio'){e.enabled = false;}
-                });
-            } else if(data.audio === "unmute"){
-                remoteStream.getTracks().forEach(e => {
-                    if (e.kind === 'audio'){e.enabled = true;}
-                });
-            } else if(data.video === "mute"){
-                remoteStream.getTracks().forEach(e => {
-                    if (e.kind === 'video'){e.enabled = false;}
-                });
-            } else if(data.video === "unmute"){
-                remoteStream.getTracks().forEach(e => {
-                    if (e.kind === 'video'){e.enabled = true;}
-                });
-            }
-        });
+        }       
     }); 
+
+    socket.on("audio/video", data => {
+        if(remoteStream && data.audio === "unmute"){ 
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'audio'){e.enabled = false;}
+            });
+        } else if(remoteStream && data.audio === "mute"){
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'audio'){e.enabled = true;}
+            });
+        } else if(remoteStream && data.video === "unmute"){
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'video'){e.enabled = false;}
+            });
+        } else if(remoteStream && data.video === "mute"){
+            remoteStream.getTracks().forEach(e => {
+                if (e.kind === 'video'){e.enabled = true;}
+            });
+        }
+    });
 
     useEffect(() => {
         if(!hideVideos){
@@ -133,7 +133,7 @@ export default function AllVideos(props){
     },[myVideo]);
 
     useEffect(() => {
-        setTimeout(makeCall,3000);
+        setTimeout(makeCall,4000);
     },[]);
     
 

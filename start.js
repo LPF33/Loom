@@ -256,11 +256,11 @@ io.on("connection", async(socket) =>{
     
     socket.on("getPainting", async(room)=> { 
         const whiteboard = await database.getWhiteboard(room);
-        socket.emit("painting", whiteboard.rows[0]);  
+        io.to(room).emit("painting", whiteboard.rows[0]);  
     });
 
     socket.on("audio/video", data => {
-        socket.emit("audio/video", data);
+        socket.to(data.room).emit("audio/video", data);
     });
 
     socket.on("painting", async(data) => { 

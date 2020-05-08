@@ -183,7 +183,7 @@ export default function canvas(canvas,room){
         canvas.addEventListener("mousemove", drawCircle);
     };
 
-    socket.on("painting", data => { 
+    socket.on("painting", data => { console.log(data);
         if(data && (data.width || data.height)){
             ctx.canvas.width = data.width;
             ctx.canvas.height = data.height;
