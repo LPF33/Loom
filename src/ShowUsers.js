@@ -7,8 +7,8 @@ import {Link} from "react-router-dom";
 export default function ShowUsers(props){
 
     const {userId} = props;
-    const serverUrl = 'https://loomchat.herokuapp.com' ;
-    //const serverUrl = "http://127.0.0.1:8080";
+    //const serverUrl = 'https://loomchat.herokuapp.com' ;
+    const serverUrl = "http://127.0.0.1:8080";
 
     const users = useSelector(state => state.UserOnline || "");
     const [explain, setExplain] = useState(false);

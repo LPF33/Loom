@@ -11,6 +11,7 @@ export default function AllVideos(props){
 
     const hideVideos = useSelector(state => state.hideVideos);
     const [classVideo, setClassVideo] = useState("");
+    const [enlarge, setEnlarge] = useState(["",""]);
 
     const audio = useSelector(state => state.audio);
     const myVideo = useSelector(state => state.video);
@@ -21,7 +22,7 @@ export default function AllVideos(props){
     let stream;  
 
     const getVideo = async() => {
-        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: {width: 350, height: 200}});        
+        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: {width: 700, height: 400}});        
         videoElement.current.srcObject = stream;         
         if(!audio){
             stream.getTracks().forEach(e => {
@@ -89,10 +90,14 @@ export default function AllVideos(props){
         
         if (e.streams && e.streams[0]) {
             remoteStream = e.streams[0];
-            videoElement2.current.srcObject = e.streams[0];
+            if(remoteStream){
+                videoElement2.current.srcObject = remoteStream;
+            }            
         } else {
             remoteStream = new MediaStream(e.track);
-            videoElement2.current.srcObject = remoteStream;
+            if(remoteStream){
+                videoElement2.current.srcObject = remoteStream;
+            }
         }       
     }); 
 
@@ -140,8 +145,8 @@ export default function AllVideos(props){
     return(
         <div id="usersVideo">
             <div className={classVideo}>
-                <video id="chatMyVideo" ref={videoElement} autoPlay></video>
-                <video className="userVideos" ref={videoElement2} autoPlay></video>
+                <video onClick={() => {if(enlarge[0]){setEnlarge(["",""]);}else{setEnlarge(["enlarge",""]);}}} id="chatMyVideo" className={`userVideos ${enlarge[0]}`} ref={videoElement} autoPlay></video>
+                <video onClick={() => {if(enlarge[1]){setEnlarge(["",""]);}else{setEnlarge(["","enlarge"]);}}} className={`userVideos ${enlarge[1]}`} ref={videoElement2} autoPlay></video>
             </div>
         </div>
     );

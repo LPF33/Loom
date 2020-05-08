@@ -13,7 +13,7 @@ const ses = new aws.SES({
     region: 'eu-central-1'
 });
 
-exports.sendInviteMail = (to,name,link) => {
+exports.sendInviteMail = (to,topic,link) => {
     return ses.sendEmail({
         Source: 'LOOM <gameslpf0@gmail.com>', 
         Destination: {
@@ -22,17 +22,17 @@ exports.sendInviteMail = (to,name,link) => {
         Message: {
             Body: {
                 Text: {
-                    Data: `Your friend ${name} invited you to a LOOM metting. Click on this link and have a nice chat: ${link}`
+                    Data: ` Join a LOOM chat session. Topic: ${topic}. Click on this link and have a nice chat: ${link}`
                 }
             },
             Subject: {
-                Data: `LOOM meeting with ${name}`
+                Data: `Invitation to a LOOM chat session`
             }
         }
     }).promise();
 };
 
-exports.sendMeInviteMail = (to,name,link) => {
+exports.sendMeInviteMail = (to,topic,link) => {
     return ses.sendEmail({
         Source: 'LOOM <gameslpf0@gmail.com>', 
         Destination: {
@@ -41,11 +41,11 @@ exports.sendMeInviteMail = (to,name,link) => {
         Message: {
             Body: {
                 Text: {
-                    Data: `Hello ${name}, you invited some friends to a LOOM metting. Just for your records or if anything goes wrong, here is the link to the chat: ${link}`
+                    Data: `Hello LOOMer, you have opened a LOOM chat session. TOPIC: ${topic}. Just for your records or if anything goes wrong, here is the link to the chatroom: ${link}`
                 }
             },
             Subject: {
-                Data: `LOOM meeting with ${name}`
+                Data: `Start LOOM chat session`
             }
         }
     }).promise();

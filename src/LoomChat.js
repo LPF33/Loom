@@ -13,8 +13,8 @@ import {audio,video, hideVideos} from "./action";
 
 export default function LoomChat(props){
 
-    const serverUrl = 'https://loomchat.herokuapp.com';
-    //const serverUrl =  "http://127.0.0.1:8080";
+    //const serverUrl = 'https://loomchat.herokuapp.com';
+    const serverUrl =  "http://127.0.0.1:8080";
     const dispatch = useDispatch();
 
     const [room, setRoom] = useState("");
@@ -87,10 +87,11 @@ export default function LoomChat(props){
             {!user && 
             <div>        
                 <div id="header">LOOM</div> 
+                <div id="header2">Connect &amp; Chat</div>
                 <div id="noChatUser" className="flexColumn">
                     <div>
                         <h1>Welcome to LOOM</h1>
-                        <h5>Connect&amp;Chat</h5>
+                        <h5>Start your chat session!</h5>
                     </div>                    
                     {status===1 &&
                         <div className="flexColumn">

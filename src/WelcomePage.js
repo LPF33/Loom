@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import './index.css';
 import axios from "./axios.js";	
+import {Link} from "react-router-dom";
 
-const serverUrl ='https://loomchat.herokuapp.com' ;
-const mainUrl = 'https://loomchat.herokuapp.com' ;
-//const serverUrl = "http://127.0.0.1:8080";
-//const mainUrl = "http://127.0.0.1:3000";
+//const serverUrl ='https://loomchat.herokuapp.com' ;
+//const mainUrl = 'https://loomchat.herokuapp.com' ;
+const serverUrl = "http://127.0.0.1:8080";
+const mainUrl = "http://127.0.0.1:3000";
 
 function FriendEmail(props){
 
@@ -20,8 +21,7 @@ function FriendEmail(props){
 
 export default function Welcome(){
     let [friendsCount, setFriendsCount] = useState(2);
-    let [firstname, setFirstName] = useState("");
-    let [lastname, setLastName] = useState("");
+    let [topic, setTopic] = useState("");
     let [mainEmail, setMainEmail] = useState("");
     let [friendEmail, setFriendEmail] = useState("");
 
@@ -47,7 +47,7 @@ export default function Welcome(){
     }, []);
 
     const sendChatMail = async () => {
-        const send = await axios.post(`${serverUrl}/invitationChat`, {firstname, lastname, mainEmail, emails, link1});
+        const send = await axios.post(`${serverUrl}/invitationChat`, {topic, mainEmail, emails, link1});
         if(send.data.success){
             setStatusChat(2);
         } else {
@@ -61,7 +61,7 @@ export default function Welcome(){
     };
 
     const sendBattleshipMail = async () => {
-        const send = await axios.post(`${serverUrl}/invitationBattleship`, {firstname, mainEmail, friendEmail, link2});
+        const send = await axios.post(`${serverUrl}/invitationBattleship`, {topic, mainEmail, friendEmail, link2});
         if(send.data.success){
             setStatusBattleship(2);
         } else {
@@ -73,55 +73,39 @@ export default function Welcome(){
             }            
         }
     };
-
-    const changeRouting = async() => {
-        await axios.post(`${serverUrl}/startLoomChat`, {firstname,lastname,room:code[0]});
-        window.location.replace(`/loomChat/${code[0]}`);
-    };
-    const changeRoutingPlay = async() => {
-        await axios.post(`${serverUrl}/startLoomactica`, {firstname,lastname,room:code[1]});
-        window.location.replace(`/loomactica/${code[1]}`);
-    };
   
     return(        
         <div>                    
             <div id="header">LOOM</div>   
             <div id="header2">Connect &amp; Chat</div>
-            <div id="loomChat">
-                <div>
+
+
+            <div id="loomChatStart">
+                <div className="flexColumn">
                     <div className="loomChatHeadline">Video &amp; Chat &amp; Whiteboard</div>
                     <h1>Connect with friends</h1>
-                    <div>
-                        <input type="text" id="firstname" name="firstname" placeholder="Your firstname" value={firstname} onChange={e => setFirstName(e.target.value)}/> 
-                        <input type="text" id="lastname" name="lastname" placeholder="Your lastname" value={lastname} onChange={e => setLastName(e.target.value)}/>   
-                    </div>
-                    <input type="email" id="email" name="email" placeholder="Your email address"  value={mainEmail} onChange={e => setMainEmail(e.target.value)}/>
-                </div>  
+                    <h2>Start right away, copy this link and send it to friends!</h2>
+                    <div className="battleshipLink">{link1}</div> 
+                    <Link to={`/loomChat/${code[0]}`} className="welcomeButton2" >Start</Link>
+                </div>
+            </div>  
+            <div id="loomChatInvitation">
                 {statusChat===1 &&             
-                <div>
-                    {statusChat!==2 &&
-                    <div className="flex">
-                        <div>
-                            <h2>Send this link to your friends:</h2>
-                            <div className="battleshipLink">{link1}</div> 
-                        </div>                       
-                        <button className="welcomeButton2" type="button" onClick={changeRouting}>Start</button>
-                    </div>  
-                    }                  
-                    <h1>OR Invite <button className="welcomeButton" type="button" onClick={() => { if(friendsCount>1){setFriendsCount(--friendsCount); emails.splice(0,1); setEmails(emails);}}} >-</button>{friendsCount}<button className="welcomeButton" type="button" onClick={() => {if(friendsCount<6){setFriendsCount(++friendsCount);setEmails([...emails,""]);} }}>+</button> friends</h1>
-                    <h2>Please, insert the email addresses of your friends!</h2>
-                    <div id="friendGrid" > {emails.map((email, index) => 
-                        <FriendEmail email={email} index={index} key={index} onChange={e => {let em= [...emails]; em[index] = e.target.value; setEmails(em);}}/>
-                    )}
-                    </div>
-                    <input type="submit" value="Invite" onClick={sendChatMail}></input>
+                <div>      
+                    <h1>Send inviations!</h1> 
+                    <h2>Invite your friends!</h2>              
+                    <h1>Invite <button className="welcomeButton" type="button" onClick={() => { if(friendsCount>1){setFriendsCount(--friendsCount); emails.splice(0,1); setEmails(emails);}}} >-</button>{friendsCount}<button className="welcomeButton" type="button" onClick={() => {if(friendsCount<6){setFriendsCount(++friendsCount);setEmails([...emails,""]);} }}>+</button> friends</h1>
+                    <h2>Topic of your LOOM session:</h2>
+                    <input type="text" id="topic" name="topic" value={topic} onChange={e => setTopic(e.target.value)}/> 
+                    <h2>Your email:</h2>
+                    <input type="email" id="mainemail" name="email" value={mainEmail} onChange={e => setMainEmail(e.target.value)}/>
                 </div>
                 } 
                 {statusChat===2 &&
-                <div>
+                <div className="flexColumn">
                     <h1>All invitations were sent successfully!</h1>
                     <h2>You can now enter the chat room!</h2>
-                    <button className="welcomeButton2" type="button" onClick={changeRouting}>Start</button>
+                    <Link to={`/loomChat/${code[0]}`} className="welcomeButton2 inviteLink" >Start</Link>
                 </div>
                 }
                 {statusChat===3 &&
@@ -137,19 +121,23 @@ export default function Welcome(){
                     <h2>Please go back and try again!</h2>
                     <button type="button" onClick={()=> setStatusChat(1)} className="welcomeButton2">Go back</button>
                 </div>
-                }
-            </div>   
+                }                
+            </div>  
+            {statusChat===1 &&
+            <div id="loomChatFriends">
+                <h2>Your friends email:</h2>
+                <div> {emails.map((email, index) => 
+                    <FriendEmail email={email} index={index} key={index} onChange={e => {let em= [...emails]; em[index] = e.target.value; setEmails(em);}}/>
+                )}
+                <input type="submit" value="Invite" onClick={sendChatMail}></input>
+                </div> 
+            </div> 
+            }
             <div id="loomBattleship">
                 <div>
                     Vorschau
                 </div>
                 <div className="flex">
-                    <div>
-                        <div className="loomChatHeadline">Battleship</div>
-                        <h1>Loomactica</h1>      
-                        <input type="text" id="firstname2" name="firstname2" placeholder="Your firstname" value={firstname} onChange={e => setFirstName(e.target.value)}/>                  
-                        <input type="email" id="email2" name="email2" placeholder="Your email address"  value={mainEmail} onChange={e => setMainEmail(e.target.value)}/>
-                    </div>
                     <div >
                         {statusBattleship !== 2 &&
                         <div className="flex battleshipside" >
@@ -157,7 +145,7 @@ export default function Welcome(){
                                 <h2>Send this link to a friend:</h2>
                                 <div className="battleshipLink">{link2}</div>
                             </div>
-                            <button className="welcomeButton2" type="button" onClick={changeRoutingPlay}>Play</button>
+                            <Link to={`/loomactica/${code[1]}`} className="welcomeButton2" >Play</Link>
                         </div>
                         }
                         {statusBattleship===1 &&
@@ -175,7 +163,7 @@ export default function Welcome(){
                                     <h1>The inviation was sent successfully!</h1>
                                     <h2>You can now go and start the battle!</h2>
                                 </div>                                    
-                                <button className="welcomeButton2" type="button" onClick={changeRoutingPlay}>Play</button>
+                                <Link to={`/loomactica/${code[1]}`} className="welcomeButton2" >Play</Link>
                             </div>
                         }   
                         {statusBattleship===3 &&

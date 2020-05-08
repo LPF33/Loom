@@ -61,7 +61,7 @@ h5 {
     height: 40%;
     position: absolute;
     top:50%;
-    left: 20px;
+    left: 90px;
     transform: translateY(-50%);
     background-color: white;
     border-radius: 10px;
@@ -241,7 +241,6 @@ h5 {
     position: absolute;
     top:0;
     right: 0;
-    width: 16vw;
 }
 
 #mute1{
@@ -301,8 +300,15 @@ h5 {
 }
 
 .userVideos{
+    transition: 1s width;
     width: 16vw;
 }
+
+.enlarge{
+    transition: 1s width;
+    width: 50vw;
+}
+
 
 #endSession {
     position: absolute;

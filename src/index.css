@@ -10,6 +10,10 @@ h1 {
   font-size: 3vw;
 }
 
+h2 {
+  font-size: 1.6vw;
+}
+
 .flex {
   display: flex;
   align-items: center;
@@ -52,15 +56,18 @@ h1 {
   cursor: none;
 }
 
-#loomChat {
+#loomChatStart {
   position: absolute;
-  top: 100%;
-  background-color: white;
-  width: 100%;
-  min-height: 50vh;
+  top: 95%;
+  left: 15%;
+  background-color: rgb(245, 129, 129);
+  width: 30vw;
+  height: 30vw;
+  border-radius: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 .loomChatHeadline{
@@ -72,25 +79,59 @@ h1 {
   text-align: center;
 }
 
-#loomChat>div:nth-child(2){
-  width: 40vw;
+#loomChatInvitation{
+  position: absolute;
+  top: 130%;
+  left: 60%;
+  background-color: rgb(99, 187, 153);
+  width: 30vw;
+  height: 30vw;
+  border-radius: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+  z-index:1;
+}
+
+#loomChatFriends{
+  position: absolute;
+  top: 165%;
+  left: 45%;
+  background-color: rgb(236, 211, 156);
+  border-radius: 100%;
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 [type=text], [type=email] {
   font-size: 1.5vw;
   border-bottom: 2px solid black;
-  margin: 5px;
+  margin: 10px;  
 }
 
 [type=submit], .welcomeLink {
-  background-color: black;
+  background-color: rgb(0, 0, 0);
   color: white;
   font-size: 1.5vw;
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
   text-decoration: none;
-  margin-left: 10px;
+  margin-top: 10px;
+}
+
+#loomChatFriends [type=email]{
+  background-color: rgb(236, 211, 156);
+}
+
+#loomChatInvitation [type=text], #loomChatInvitation [type=email]{
+  background-color: rgb(99, 187, 153);
 }
 
 .welcomeButton {
@@ -114,29 +155,27 @@ h1 {
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
-  margin: 5px;
   outline: none;
+  text-align: center;
+  text-decoration: none;
+}
+
+.inviteLink{
+  margin-top:20px;
 }
 
 .mailError {
-  font-size: 3vw;
+  font-size: 2.4vw;
   color: white;
-  background-color: red;
   font-weight: bold;
-  padding: 5px;
+  padding: 2px;
   border-radius: 10px;
-}
-
-#friendGrid {
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  grid-auto-columns: 1fr;
-  grid-auto-flow: column;
+  margin: 10px 0;
 }
 
 #loomBattleship {
   position: absolute;
-  top: 200%;
+  top: 240%;
   background-color: white;
   width: 100%;
   min-height: 40vh;
@@ -150,11 +189,12 @@ h1 {
 }
 
 .battleshipLink{
-  color: rgb(248, 45, 79);
+  background-color: rgb(136, 159, 221);
   font-weight: bold;
   font-size: 1.8vw;
+  padding: 5px;
   margin: 5px;
-  border-bottom: 2px solid rgb(248, 45, 79);
+  border-radius: 10px;
 }
 
 .battleshipside{

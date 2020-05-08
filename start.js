@@ -58,9 +58,9 @@ app.get("/randomCode", (request, response) => {
 });
 
 app.post("/invitationChat", async (request, response) => {
-    const {firstname, lastname, mainEmail, emails, link1} = request.body;
+    const {topic, mainEmail, emails, link1} = request.body;
 
-    if(!firstname || !lastname || !mainEmail || !emails[0]){
+    if(!topic || !mainEmail || !emails[0]){
         response.json({
             success: false,
             empty: true
@@ -68,7 +68,7 @@ app.post("/invitationChat", async (request, response) => {
     } else {   
         let check; 
         try {
-            await ses.sendMeInviteMail(mainEmail,`${firstname} ${lastname}`,link1); 
+            await ses.sendMeInviteMail(mainEmail,`${topic}`,link1); 
             check = true;
         } catch(error){
             check = false;
@@ -81,7 +81,7 @@ app.post("/invitationChat", async (request, response) => {
             try {
                 for(let email of emails){
                     if(email){
-                        await ses.sendInviteMail(email,`${firstname} ${lastname}`,link1);
+                        await ses.sendInviteMail(email,`${topic}`,link1);
                     }                
                 }            
                 response.json({
@@ -139,7 +139,7 @@ app.post("/invitationBattleship", async (request, response) => {
 app.get("/checkroomsize/:room", async(request, response) => {
     const {room} = request.params;
     const count = await database.roomMembers(room);
-    const roomSize = count.rows[0].count;
+    const roomSize = count.rows[0].count; 
 
     if(roomSize>1){
         response.json({
@@ -204,11 +204,11 @@ app.get("*", function(request, response) {
 
 io.on("connection", async(socket) =>{    
     const userId = socket.request.session.userId;
-    
+
     if(!socket.request.session.userId){
         return socket.disconnect(true);
-    }  
-
+    }
+    
     socket.on("countdown", room => {
         const roomData = io.sockets.adapter.rooms[room];
         const roomMembers = roomData.length;
