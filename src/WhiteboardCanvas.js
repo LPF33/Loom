@@ -86,6 +86,9 @@ export default function canvas(canvas,room){
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", drawPencil);
+        canvas.removeEventListener("touchmove", drawCircle);
+        canvas.removeEventListener("touchmove", drawRectangle); 
+        canvas.removeEventListener("touchmove", drawPencil);
 
         if(painting){
             startPointX = e.offsetX;
@@ -99,7 +102,9 @@ export default function canvas(canvas,room){
             ctx.closePath();            
         }
         canvas.removeEventListener("mousemove", erase); 
-        canvas.addEventListener("mousemove", erase);        
+        canvas.addEventListener("mousemove", erase);   
+        canvas.removeEventListener("touchmove", erase); 
+        canvas.addEventListener("touchmove", erase);     
     };
 
     //Paint with a pencil, paint a stroke
@@ -107,6 +112,9 @@ export default function canvas(canvas,room){
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", erase);
+        canvas.removeEventListener("touchmove", drawCircle);
+        canvas.removeEventListener("touchmove", drawRectangle); 
+        canvas.removeEventListener("touchmove", erase);
         if(painting){                        
             ctx.beginPath();
             ctx.strokeStyle = color;
@@ -124,7 +132,9 @@ export default function canvas(canvas,room){
             });
         }
         canvas.removeEventListener("mousemove", drawPencil);
-        canvas.addEventListener("mousemove", drawPencil);        
+        canvas.addEventListener("mousemove", drawPencil);  
+        canvas.removeEventListener("touchmove", drawPencil);
+        canvas.addEventListener("touchmove", drawPencil);      
     };
 
     let rectangleEndX;
@@ -135,6 +145,9 @@ export default function canvas(canvas,room){
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawPencil);       
         canvas.removeEventListener("mousemove", erase);
+        canvas.removeEventListener("touchmove", drawCircle);
+        canvas.removeEventListener("touchmove", drawPencil);       
+        canvas.removeEventListener("touchmove", erase);
         if(rectanglePaint){          
             ctx.clearRect(startPointX,startPointY,rectangleEndX,rectangleEndY);
         }
@@ -152,7 +165,9 @@ export default function canvas(canvas,room){
             });
         }
         canvas.removeEventListener("mousemove", drawRectangle);
-        canvas.addEventListener("mousemove", drawRectangle);     
+        canvas.addEventListener("mousemove", drawRectangle); 
+        canvas.removeEventListener("touchmove", drawRectangle);
+        canvas.addEventListener("touchmove", drawRectangle);    
     };
 
     //Draw a circle
@@ -160,6 +175,9 @@ export default function canvas(canvas,room){
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", drawPencil);       
         canvas.removeEventListener("mousemove", erase);
+        canvas.removeEventListener("touchmove", drawRectangle); 
+        canvas.removeEventListener("touchmove", drawPencil);       
+        canvas.removeEventListener("touchmove", erase);
 
         if(painting){ 
             ctx.beginPath();
@@ -181,6 +199,8 @@ export default function canvas(canvas,room){
         }
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.addEventListener("mousemove", drawCircle);
+        canvas.removeEventListener("touchmove", drawCircle);
+        canvas.addEventListener("touchmove", drawCircle);
     };
 
     socket.on("painting", data => { console.log(data);

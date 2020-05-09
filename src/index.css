@@ -110,7 +110,7 @@ h2 {
 }
 
 [type=text], [type=email] {
-  font-size: 0.7vw;
+  font-size: 0.8vw;
   border-bottom: 2px solid black;
   margin: 10px;  
   font-family: Verdana, sans-serif;
