@@ -110,9 +110,10 @@ h2 {
 }
 
 [type=text], [type=email] {
-  font-size: 1.5vw;
+  font-size: 0.7vw;
   border-bottom: 2px solid black;
   margin: 10px;  
+  font-family: Verdana, sans-serif;
 }
 
 [type=submit], .welcomeLink {
@@ -212,6 +213,7 @@ h2 {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   text-align: center;
   color: white;  
 }

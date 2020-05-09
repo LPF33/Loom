@@ -3,10 +3,8 @@ import './index.css';
 import axios from "./axios.js";	
 import {Link} from "react-router-dom";
 
-const serverUrl ='https://loomchat.herokuapp.com' ;
-const mainUrl = 'https://loomchat.herokuapp.com' ;
-//const serverUrl = "http://127.0.0.1:8080";
-//const mainUrl = "http://127.0.0.1:3000";
+const serverUrl = process.env.PORT ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:8080";
+const mainUrl = process.env.PORT ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:3000";
 
 function FriendEmail(props){
 
@@ -188,7 +186,7 @@ export default function Welcome(){
                 </div>
             </div>  
             <div id="end">
-                <div>This is not the END</div>
+                <div>THE END</div>
             </div>             
         </div>        
     );

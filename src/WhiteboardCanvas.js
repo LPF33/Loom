@@ -219,4 +219,6 @@ export default function canvas(canvas,room){
 
     canvas.addEventListener("mousedown", paintStart);
     canvas.addEventListener("mouseup", paintEnd);
+    canvas.addEventListener("touchstart", paintStart);
+    canvas.addEventListener("touchend", paintEnd);
 }
