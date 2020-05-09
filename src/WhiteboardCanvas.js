@@ -70,19 +70,22 @@ export default function canvas(canvas,room){
     let startPointX;
     let startPointY;
 
-    const paintStart = e => {      
+    const paintStart = e => {    
+        e.preventDefault();  
         painting = true;
         startPointX = e.offsetX;
         startPointY = e.offsetY;        
     };
 
-    const paintEnd = () => {
+    const paintEnd = e => {
+        e.preventDefault();
         painting = false;
         rectanglePaint = false;        
     };
     
     //rubber
     const erase = e => {
+        e.preventDefault();
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", drawPencil);
@@ -108,7 +111,8 @@ export default function canvas(canvas,room){
     };
 
     //Paint with a pencil, paint a stroke
-    const drawPencil = e => {    
+    const drawPencil = e => {  
+        e.preventDefault();  
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", erase);
@@ -142,6 +146,7 @@ export default function canvas(canvas,room){
 
     //draw a rectangle
     const drawRectangle = e => {
+        e.preventDefault();
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawPencil);       
         canvas.removeEventListener("mousemove", erase);
@@ -172,6 +177,7 @@ export default function canvas(canvas,room){
 
     //Draw a circle
     const drawCircle = e => {
+        e.preventDefault();
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", drawPencil);       
         canvas.removeEventListener("mousemove", erase);
