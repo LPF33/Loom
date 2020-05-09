@@ -13,8 +13,8 @@ import {audio,video, hideVideos} from "./action";
 
 export default function LoomChat(props){
 
-    //const serverUrl = 'https://loomchat.herokuapp.com';
-    const serverUrl =  "http://127.0.0.1:8080";
+    const serverUrl = 'https://loomchat.herokuapp.com';
+    //const serverUrl =  "http://127.0.0.1:8080";
     const dispatch = useDispatch();
 
     const [room, setRoom] = useState("");
