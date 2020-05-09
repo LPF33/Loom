@@ -51,7 +51,7 @@ exports.sendMeInviteMail = (to,topic,link) => {
     }).promise();
 };
 
-exports.sendBattleshipMail = (to,name,link) => {
+exports.sendBattleshipMail = (to,topic,link) => {
     return ses.sendEmail({
         Source: 'LOOM <gameslpf0@gmail.com>', 
         Destination: {
@@ -60,11 +60,11 @@ exports.sendBattleshipMail = (to,name,link) => {
         Message: {
             Body: {
                 Text: {
-                    Data: `Your friend ${name} invited you to a game of LOOMactica Battleship. Click on this link and have a glorious battle: ${link}`
+                    Data: `LOOMactica Battleship, play the game against your friend! Following message sends your friend: ${topic}. Click on this link and have a glorious battle: ${link}`
                 }
             },
             Subject: {
-                Data: `LOOMactica against ${name}`
+                Data: `LOOMactica Battleship`
             }
         }
     }).promise();
@@ -79,11 +79,11 @@ exports.sendMeBattleshipMail = (to,name,link) => {
         Message: {
             Body: {
                 Text: {
-                    Data: `Hello ${name}, you invited a friend to a game of LOOMactica Battleship. Just for your records or if anything goes wrong, here is the link to the game: ${link}`
+                    Data: `Hello LOOMer, you invited a friend to a game of LOOMactica Battleship. Just for your records or if anything goes wrong, here is the link to the game: ${link}`
                 }
             },
             Subject: {
-                Data: `LOOMactica against ${name}`
+                Data: `LOOMactica Battleship`
             }
         }
     }).promise();

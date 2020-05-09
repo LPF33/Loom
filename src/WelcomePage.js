@@ -131,60 +131,54 @@ export default function Welcome(){
                 </div> 
             </div> 
             }
+            <div id="loomBattleshipPreview">
+                Vorschau
+            </div>
             <div id="loomBattleship">
-                <div>
-                    Vorschau
+                <div className="flexColumn">
+                    <div className="loomChatHeadline">LOOMactica Battleship</div>
+                    <h1>Play this classic game!</h1>
+                    <h2>Copy &amp; send this link to a friend:</h2>
+                    <div className="battleshipLink">{link2}</div>
+                    <Link to={`/loomactica/${code[1]}`} className="welcomeButton2" >Play</Link>
                 </div>
-                <div className="flex">
-                    <div >
-                        {statusBattleship !== 2 &&
-                        <div className="flex battleshipside" >
-                            <div>
-                                <h2>Send this link to a friend:</h2>
-                                <div className="battleshipLink">{link2}</div>
-                            </div>
+            </div>
+            <div id="loomBattleshipInvitation">
+                <div>
+                    {statusBattleship===1 &&
+                    <div className="flexColumn" >   
+                        <h1>Invite your friend!</h1>                         
+                        <h2>Send a message:</h2>
+                        <input type="text" id="topic" name="topic" value={topic} onChange={e => setTopic(e.target.value)}/> 
+                        <h2>Your and your friends email:</h2>
+                        <input type="email" id="mainemail" name="email" value={mainEmail} placeholder="your email address" onChange={e => setMainEmail(e.target.value)}/>
+                        <input type="email" id="battleemail" name="battleemail" placeholder="friends email address" value={friendEmail} onChange={e => setFriendEmail(e.target.value)}/>
+                        <input type="submit" value="Send" onClick={sendBattleshipMail}></input>                                
+                    </div> 
+                    }      
+                    {statusBattleship===2 &&
+                        <div className="flexColumn">
+                            <h1>The inviation was sent successfully!</h1>
+                            <h2>You can now start the battle!</h2>                               
                             <Link to={`/loomactica/${code[1]}`} className="welcomeButton2" >Play</Link>
                         </div>
-                        }
-                        {statusBattleship===1 &&
-                        <div className="flex battleshipside" >                                
-                            <div>
-                                <h2>Or send an email to your friend:</h2>
-                                <input type="email" id="battleemail" name="battleemail" placeholder="friends email address" value={friendEmail} onChange={e => setFriendEmail(e.target.value)}/>
-                            </div>
-                            <input type="submit" value="Send" onClick={sendBattleshipMail}></input>                                
-                        </div> 
-                        }      
-                        {statusBattleship===2 &&
-                            <div className="flex battleshipside">
-                                <div>
-                                    <h1>The inviation was sent successfully!</h1>
-                                    <h2>You can now go and start the battle!</h2>
-                                </div>                                    
-                                <Link to={`/loomactica/${code[1]}`} className="welcomeButton2" >Play</Link>
-                            </div>
-                        }   
-                        {statusBattleship===3 &&
-                        <div className="flex battleshipside">
-                            <div>
-                                <h1>A problem occured</h1>
-                                <div className="mailError">{error2}</div>
-                            </div>                                
-                            <button type="button" onClick={()=> setStatusBattleship(1)} className="welcomeButton2">Go back</button>
-                        </div>
-                        }
-                        {statusBattleship===4 &&
-                        <div className="flex battleshipside">
-                            <div>
-                                <h1>Please fill out all fields!</h1>
-                                <h2>Please go back and try again!</h2>
-                            </div>                                
-                            <button type="button" onClick={()=> setStatusBattleship(1)} className="welcomeButton2">Go back</button>
-                        </div>
-                        }
-                    </div>  
-                </div>
-            </div>  
+                    }   
+                    {statusBattleship===3 &&
+                    <div className="flexColumn">
+                        <h1>A problem occured</h1>
+                        <div className="mailError">{error2}</div>                            
+                        <button type="button" onClick={()=> setStatusBattleship(1)} className="welcomeButton2">Go back</button>
+                    </div>
+                    }
+                    {statusBattleship===4 &&
+                    <div className="flexColumn">
+                        <h1 className="flex" >Please fill out all fields!</h1>
+                        <h2>Please go back and try again!</h2>                         
+                        <button type="button" onClick={()=> setStatusBattleship(1)} className="welcomeButton2">Go back</button>
+                    </div>
+                    }
+                </div>  
+            </div> 
             <div id="end">
                 <div>THE END</div>
             </div>             

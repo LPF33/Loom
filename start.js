@@ -101,9 +101,9 @@ app.post("/invitationChat", async (request, response) => {
 });
 
 app.post("/invitationBattleship", async (request, response) => {
-    const {firstname, mainEmail, friendEmail, link2} = request.body;
+    const {topic, mainEmail, friendEmail, link2} = request.body;
 
-    if(!firstname || !mainEmail || !friendEmail){
+    if(!topic || !mainEmail || !friendEmail){
         response.json({
             success: false,
             empty: true
@@ -111,7 +111,7 @@ app.post("/invitationBattleship", async (request, response) => {
     } else {   
         let check; 
         try {
-            await ses.sendMeBattleshipMail(mainEmail,firstname,link2); 
+            await ses.sendMeBattleshipMail(mainEmail,topic,link2); 
             check = true;
         } catch(error){
             check = false;
@@ -122,7 +122,7 @@ app.post("/invitationBattleship", async (request, response) => {
         }
         if(check){
             try { 
-                await ses.sendBattleshipMail(friendEmail,firstname,link2);         
+                await ses.sendBattleshipMail(friendEmail,topic,link2);         
                 response.json({
                     success: true
                 });
