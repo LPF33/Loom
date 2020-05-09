@@ -3,8 +3,8 @@ import './index.css';
 import axios from "./axios.js";	
 import {Link} from "react-router-dom";
 
-const serverUrl = process.env.PORT ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:8080";
-const mainUrl = process.env.PORT ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:3000";
+const serverUrl = window.location.href.startsWith("https://loomchat.herokuapp.com") ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:8080";
+const mainUrl = window.location.href.startsWith("https://loomchat.herokuapp.com") ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:3000";
 
 function FriendEmail(props){
 

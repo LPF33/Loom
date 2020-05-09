@@ -5,7 +5,7 @@ export let socket;
 
 export const init = store => {
     if (!socket) {
-        const serverUrl = process.env.PORT ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:8080";
+        const serverUrl = window.location.href.startsWith("https://loomchat.herokuapp.com") ? 'https://loomchat.herokuapp.com' : "http://127.0.0.1:8080";
         socket = io.connect(serverUrl);
     }
     
