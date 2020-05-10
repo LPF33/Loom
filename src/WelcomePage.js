@@ -149,9 +149,9 @@ export default function Welcome(){
                     <div className="flexColumn" >   
                         <h1>Invite your friend!</h1>                         
                         <h2>Send a message:</h2>
-                        <input type="text" id="topic" name="topic" value={topic} onChange={e => setTopic(e.target.value)}/> 
+                        <input type="text"  name="topic" value={topic} onChange={e => setTopic(e.target.value)}/> 
                         <h2>Your and your friends email:</h2>
-                        <input type="email" id="mainemail" name="email" value={mainEmail} placeholder="your email address" onChange={e => setMainEmail(e.target.value)}/>
+                        <input type="email"  name="email" value={mainEmail} placeholder="your email address" onChange={e => setMainEmail(e.target.value)}/>
                         <input type="email" id="battleemail" name="battleemail" placeholder="friends email address" value={friendEmail} onChange={e => setFriendEmail(e.target.value)}/>
                         <input type="submit" value="Send" onClick={sendBattleshipMail}></input>                                
                     </div> 
