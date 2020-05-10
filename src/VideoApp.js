@@ -22,8 +22,28 @@ export default function AllVideos(props){
     let stream;  
 
     const getVideo = async() => {
-        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: {width: 700, height: 400}});        
-        videoElement.current.srcObject = stream;         
+        const constraints = {audio: true, video: {width: 700, height: 400}};
+        if (navigator.mediaDevices === undefined) {
+            navigator.mediaDevices = {};
+        }
+        if (navigator.mediaDevices.getUserMedia === undefined) {
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+                let getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+                if (!getUserMedia) {
+                    return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+                }
+                return new Promise(function(resolve, reject) {
+                    getUserMedia.call(navigator, constraints, resolve, reject);
+                });
+            };
+        }
+        stream = await navigator.mediaDevices.getUserMedia(constraints);        
+        videoElement.current.srcObject = stream;  
+        if ("srcObject" in videoElement.current) {
+            videoElement.current.srcObject = stream;  
+        } else {
+            videoElement.current.src = window.URL.createObjectURL(stream);
+        }       
         if(!audio){
             stream.getTracks().forEach(e => {
                 if (e.kind === 'audio'){e.enabled = false; socket.emit("audio/video", {room, audio:"unmute"});}
