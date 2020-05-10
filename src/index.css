@@ -221,7 +221,7 @@ h2 {
   text-align: center;
 }
 
-#loomBattleshipInvitation [type=email], [type=text]{
+#loomBattleshipInvitation [type=email],#loomBattleshipInvitation [type=text]{
   background-color: rgb(99, 177, 187);
 }
 
@@ -241,7 +241,7 @@ h2 {
 
 #end{
   position: absolute;
-  top: 350%;
+  top: 360%;
   width: 100%;
   display: flex;
   align-items: center;

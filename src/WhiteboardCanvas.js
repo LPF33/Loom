@@ -77,8 +77,8 @@ export default function canvas(canvas,room){
     };
     const paintStartT = e => {    
         painting = true;
-        startPointX = e.targetTouches[0].clientX;
-        startPointY = e.targetTouches[0].clientY;      
+        startPointX = e.targetTouches[0].pageX;
+        startPointY = e.targetTouches[0].pageY;      
     };
 
     const paintEnd = e => {
@@ -122,11 +122,11 @@ export default function canvas(canvas,room){
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(startPointX,startPointY);
-            e.offsetX ? ctx.lineTo(e.offsetX,e.offsetY) : ctx.lineTo(e.targetTouches[0].clientX,e.targetTouches[0].clientY);            
+            e.offsetX ? ctx.lineTo(e.offsetX,e.offsetY) : ctx.lineTo(e.targetTouches[0].pageX,e.targetTouches[0].pageY);            
             ctx.stroke(); 
             ctx.closePath();   
-            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].clientX;
-            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].clientY;
+            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX;
+            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY;
             
             //Emit data
             socket.emit("painting", {
@@ -157,8 +157,8 @@ export default function canvas(canvas,room){
         if(painting){      
             rectanglePaint = true;             
             ctx.strokeStyle = color;
-            rectangleEndX = e.offsetX ? e.offsetX-startPointX : e.targetTouches[0].clientX-startPointX;
-            rectangleEndY = e.offsetY ? e.offsetX-startPointY : e.targetTouches[0].clientY-startPointY;
+            rectangleEndX = e.offsetX ? e.offsetX-startPointX : e.targetTouches[0].pageX-startPointX;
+            rectangleEndY = e.offsetY ? e.offsetX-startPointY : e.targetTouches[0].pageY-startPointY;
             ctx.strokeRect(startPointX,startPointY,rectangleEndX,rectangleEndY);            
             
             //Emit data
@@ -186,8 +186,8 @@ export default function canvas(canvas,room){
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.fillStyle = color;
-            let circleX = e.offsetX ? Math.pow(e.offsetX-startPointX,2) : Math.pow(e.targetTouches[0].clientX-startPointX,2);
-            let circleY = e.offsetY ? Math.pow(e.offsetY-startPointY,2) : Math.pow(e.targetTouches[0].clientY-startPointY,2);
+            let circleX = e.offsetX ? Math.pow(e.offsetX-startPointX,2) : Math.pow(e.targetTouches[0].pageX-startPointX,2);
+            let circleY = e.offsetY ? Math.pow(e.offsetY-startPointY,2) : Math.pow(e.targetTouches[0].pageY-startPointY,2);
             let line = Math.sqrt(circleX+circleY); 
             ctx.arc(startPointX, startPointY, line, 0, Math.PI*2, false);
             ctx.fill();
