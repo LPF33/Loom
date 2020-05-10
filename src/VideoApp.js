@@ -101,7 +101,7 @@ export default function AllVideos(props){
         }       
     }); 
 
-    socket.on("audio/video", data => {
+    socket.on("audio/video", data => { console.log(data);
         if(remoteStream && data.audio === "unmute"){ 
             remoteStream.getTracks().forEach(e => {console.log("audio unmute");
                 if (e.kind === 'audio'){e.enabled = false;}
@@ -110,11 +110,11 @@ export default function AllVideos(props){
             remoteStream.getTracks().forEach(e => {console.log("audio mute");
                 if (e.kind === 'audio'){e.enabled = true;}
             });
-        } else if(remoteStream && data.video === "unmute"){
+        } else if(remoteStream && data.video === "unmute"){console.log("video unmute");
             remoteStream.getTracks().forEach(e => {
                 if (e.kind === 'video'){e.enabled = false;}
             });
-        } else if(remoteStream && data.video === "mute"){
+        } else if(remoteStream && data.video === "mute"){console.log("video unmute");
             remoteStream.getTracks().forEach(e => {
                 if (e.kind === 'video'){e.enabled = true;}
             });
