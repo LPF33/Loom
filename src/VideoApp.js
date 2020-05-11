@@ -21,8 +21,8 @@ export default function AllVideos(props){
     let localPeerConnection = new RTCPeerConnection(stunServer);
     let stream;  
 
-    const getVideo = async(audio) => {
-        const constraints = {audio: audio, video: {width: 700, height: 400}};
+    const getVideo = async() => {
+        const constraints = {audio: true, video: {width: 700, height: 400}};
         if (navigator.mediaDevices === undefined) {
             navigator.mediaDevices = {};
         }
@@ -50,7 +50,6 @@ export default function AllVideos(props){
             });
         } else if(myVideo){console.log("mute");
             stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled =false;}
                 if (e.kind === 'video'){e.enabled = true;socket.emit("audio/video", {room,video:"mute"});} 
             });
         }
@@ -146,7 +145,6 @@ export default function AllVideos(props){
     },[hideVideos]);
 
     useEffect(() => {
-        getVideo(audio);
         if(audio){
             socket.emit("audio/video", {room,audio:"mute"});
         } else {
@@ -161,7 +159,7 @@ export default function AllVideos(props){
     return(
         <div id="usersVideo">
             <div className={classVideo}>
-                <video onClick={() => {if(enlarge[0]){setEnlarge(["",""]);}else{setEnlarge(["enlarge",""]);}}} id="chatMyVideo" className={`userVideos ${enlarge[0]}`} ref={videoElement} autoPlay></video>
+                <video onClick={() => {if(enlarge[0]){setEnlarge(["",""]);}else{setEnlarge(["enlarge",""]);}}} id="chatMyVideo" muted="true" className={`userVideos ${enlarge[0]}`} ref={videoElement} autoPlay></video>
                 <video onClick={() => {if(enlarge[1]){setEnlarge(["",""]);}else{setEnlarge(["","enlarge"]);}}} className={`userVideos ${enlarge[1]}`} ref={videoElement2} autoPlay></video>
             </div>
         </div>
