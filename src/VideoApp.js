@@ -42,7 +42,11 @@ export default function AllVideos(props){
             videoElement.current.srcObject = stream;  
         } else {
             videoElement.current.src = window.URL.createObjectURL(stream);
-        }      
+        }   
+        stream.getTracks().forEach(e => {
+            if (e.kind === 'audio'){e.enabled =false;}
+        });
+           
         if(!myVideo){console.log("unmute");
             stream.getTracks().forEach(e => {
                 if (e.kind === 'video'){e.enabled = false;socket.emit("audio/video", {room,video:"unmute"});}
