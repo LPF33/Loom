@@ -234,8 +234,14 @@ io.on("connection", async(socket) =>{
         socket.join(room);
         const allUsers = await database.getChatUsers(room);
         io.to(room).emit("useronline", {user:allUsers.rows});     
-        socket.to(room).emit("startP2P", socket.id);
-    });       
+        socket.to(room).emit("startP2P", socket.id); 
+        for (let item in io.sockets.sockets){
+            if(item !== socket.id){
+                io.sockets.sockets[socket.id].emit("startP2P", item); 
+            }            
+        }
+        
+    });  
 
     socket.on("chatMessage", async (data) => {     
         const {room, messagedraft,firstname,lastname} = data; 
@@ -247,7 +253,7 @@ io.on("connection", async(socket) =>{
         });
     });    
     
-    socket.on("video", data => { console.log("video", data);
+    socket.on("video", data => { 
         io.sockets.sockets[data.socketId].emit("video", {desc: data.desc, socketId: socket.id});
     });
 

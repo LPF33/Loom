@@ -37,8 +37,7 @@ export default function AllVideos(props){
                 });
             };
         }
-        stream = await navigator.mediaDevices.getUserMedia(constraints);        
-        videoElement.current.srcObject = stream;  
+        stream = await navigator.mediaDevices.getUserMedia(constraints);     
         if ("srcObject" in videoElement.current) {
             videoElement.current.srcObject = stream;  
         } else {
@@ -142,7 +141,8 @@ export default function AllVideos(props){
     });
 
     socket.on("startP2P", socketId => {
-        makeCall(socketId);
+        setTimeout(() => makeCall(socketId),3000);   
+        console.log("P2p", socketId);     
     });
 
     useEffect(() => {
@@ -159,8 +159,7 @@ export default function AllVideos(props){
 
     useEffect(() => {console.log("videoaufruf");
         getVideo({myVideo:myVideo, get: false});
-    },[myVideo]);
-    
+    },[myVideo]);    
 
     return(
         <div id="usersVideo">
