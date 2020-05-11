@@ -21,8 +21,8 @@ export default function AllVideos(props){
     let localPeerConnection = new RTCPeerConnection(stunServer);
     let stream;  
 
-    const getVideo = async() => {
-        const constraints = {audio: true, video: {width: 700, height: 400}};
+    const getVideo = async(audio) => {
+        const constraints = {audio: audio, video: {width: 700, height: 400}};
         if (navigator.mediaDevices === undefined) {
             navigator.mediaDevices = {};
         }
@@ -43,10 +43,7 @@ export default function AllVideos(props){
         } else {
             videoElement.current.src = window.URL.createObjectURL(stream);
         }   
-        stream.getTracks().forEach(e => {
-            if (e.kind === 'audio'){e.enabled =false;}
-        });
-           
+
         if(!myVideo){console.log("unmute");
             stream.getTracks().forEach(e => {
                 if (e.kind === 'video'){e.enabled = false;socket.emit("audio/video", {room,video:"unmute"});}
@@ -138,7 +135,6 @@ export default function AllVideos(props){
 
     socket.on("startP2P", socketId => {
         setTimeout(() => makeCall(socketId),3000);   
-        console.log("P2p", socketId);     
     });
 
     useEffect(() => {
@@ -150,6 +146,7 @@ export default function AllVideos(props){
     },[hideVideos]);
 
     useEffect(() => {
+        getVideo(audio);
         if(audio){
             socket.emit("audio/video", {room,audio:"mute"});
         } else {
