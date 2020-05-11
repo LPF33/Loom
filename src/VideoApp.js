@@ -21,7 +21,7 @@ export default function AllVideos(props){
     let localPeerConnection = new RTCPeerConnection(stunServer);
     let stream;  
 
-    const getVideo = async() => {
+    const getVideo = async(obj) => {
         const constraints = {audio: true, video: {width: 700, height: 400}};
         if (navigator.mediaDevices === undefined) {
             navigator.mediaDevices = {};
@@ -43,21 +43,21 @@ export default function AllVideos(props){
             videoElement.current.srcObject = stream;  
         } else {
             videoElement.current.src = window.URL.createObjectURL(stream);
-        }       
-        if(!audio){
+        }   
+        console.log(obj);    
+        if(!obj.audio && obj.get){
             stream.getTracks().forEach(e => {
                 if (e.kind === 'audio'){e.enabled = false; socket.emit("audio/video", {room, audio:"unmute"});}
             });
-        } else{
+        } else if(obj.audio && obj.get){
             stream.getTracks().forEach(e => {
                 if (e.kind === 'audio'){e.enabled = true;socket.emit("audio/video", {room,audio:"mute"});} 
             });
-        }
-        if(!myVideo){
+        }else if(!obj.myVideo && !obj.get){
             stream.getTracks().forEach(e => {
                 if (e.kind === 'video'){e.enabled = false;socket.emit("audio/video", {room,video:"unmute"});}
             });
-        } else{
+        } else if(obj.myVideo && !obj.get){
             stream.getTracks().forEach(e => {
                 if (e.kind === 'video'){e.enabled = true;socket.emit("audio/video", {room,video:"mute"});} 
             });
@@ -67,24 +67,24 @@ export default function AllVideos(props){
         });
     };
 
-    const makeCall = async() => {   
+    const makeCall = async(socketId) => {   
         const desc = await localPeerConnection.createOffer();
         await localPeerConnection.setLocalDescription(desc);
-        socket.emit('video', {room,desc});
+        socket.emit('video', {socketId,desc});
     };
     
-    socket.on("video", async (data) => {
-        if (data && data.type === "answer") {
-            const desc = new RTCSessionDescription(data);
+    socket.on("video", async (data) => { 
+        if (data.desc && data.desc.type === "answer") {
+            const desc = new RTCSessionDescription(data.desc);
             await localPeerConnection.setRemoteDescription(desc); 
         }
-        if (data && data.type === "offer") {
-            await localPeerConnection.setRemoteDescription(data); 
+        if (data.desc && data.desc.type === "offer") {
+            await localPeerConnection.setRemoteDescription(data.desc); 
             const desc = await localPeerConnection.createAnswer();
             await localPeerConnection.setLocalDescription(desc);            
-            socket.emit('video', {room, desc});
+            socket.emit('video', {socketId: data.socketId, desc});
         }
-        if (data.candidate) {console.log("addIceCandidate",data.candidate);
+        if (data.candidate) {
             try {
                 await localPeerConnection.addIceCandidate(data.candidate['new-ice-candidate']);
             } catch (e) {
@@ -106,7 +106,7 @@ export default function AllVideos(props){
     });  
     let remoteStream  = null;
 
-    localPeerConnection.addEventListener('track', async (e) => {        
+    localPeerConnection.addEventListener('track', async (e) => {     console.log(e);   
         
         if (e.streams && e.streams[0]) {
             remoteStream = e.streams[0];
@@ -121,7 +121,7 @@ export default function AllVideos(props){
         }       
     }); 
 
-    socket.on("audio/video", data => { console.log(data);
+    socket.on("audio/video", data => { 
         if(remoteStream && data.audio === "unmute"){ 
             remoteStream.getTracks().forEach(e => {console.log("audio unmute");
                 if (e.kind === 'audio'){e.enabled = false;}
@@ -141,6 +141,10 @@ export default function AllVideos(props){
         }
     });
 
+    socket.on("startP2P", socketId => {
+        makeCall(socketId);
+    });
+
     useEffect(() => {
         if(!hideVideos){
             setClassVideo("hideVideos");
@@ -149,17 +153,13 @@ export default function AllVideos(props){
         }
     },[hideVideos]);
 
-    useEffect(() => {
-        getVideo();
+    useEffect(() => {console.log("audioaufruf");
+        getVideo({audio:audio, get: true});
     },[audio]);
 
-    useEffect(() => {
-        getVideo();
+    useEffect(() => {console.log("videoaufruf");
+        getVideo({myVideo:myVideo, get: false});
     },[myVideo]);
-
-    useEffect(() => {
-        setTimeout(makeCall,4000);
-    },[]);
     
 
     return(
