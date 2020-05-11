@@ -77,7 +77,6 @@ export default function Welcome(){
             <div id="header">LOOM</div>   
             <div id="header2">Connect &amp; Chat</div>
 
-
             <div id="loomChatStart">
                 <div className="flexColumn">
                     <div className="loomChatHeadline">Video &amp; Chat &amp; Whiteboard</div>

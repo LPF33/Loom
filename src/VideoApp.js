@@ -46,7 +46,7 @@ export default function AllVideos(props){
         console.log(obj);    
         if(!obj.audio && obj.get){
             stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = false; socket.emit("audio/video", {room, audio:"unmute"});}
+                if (e.kind === 'audio'){e.enabled = true; socket.emit("audio/video", {room, audio:"unmute"});}
             });
         } else if(obj.audio && obj.get){
             stream.getTracks().forEach(e => {
