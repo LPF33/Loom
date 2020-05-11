@@ -21,7 +21,7 @@ export default function AllVideos(props){
     let localPeerConnection = new RTCPeerConnection(stunServer);
     let stream;  
 
-    const getVideo = async(obj) => {
+    const getVideo = async() => {
         const constraints = {audio: true, video: {width: 700, height: 400}};
         if (navigator.mediaDevices === undefined) {
             navigator.mediaDevices = {};
@@ -37,27 +37,19 @@ export default function AllVideos(props){
                 });
             };
         }
-        stream = await navigator.mediaDevices.getUserMedia(constraints);     
+        stream = await navigator.mediaDevices.getUserMedia(constraints); 
         if ("srcObject" in videoElement.current) {
             videoElement.current.srcObject = stream;  
         } else {
             videoElement.current.src = window.URL.createObjectURL(stream);
-        }   
-        console.log(obj);    
-        if(!obj.audio && obj.get){
-            stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = true; socket.emit("audio/video", {room, audio:"unmute"});}
-            });
-        } else if(obj.audio && obj.get){
-            stream.getTracks().forEach(e => {
-                if (e.kind === 'audio'){e.enabled = true;socket.emit("audio/video", {room,audio:"mute"});} 
-            });
-        }else if(!obj.myVideo && !obj.get){
+        }      
+        if(!myVideo){console.log("unmute");
             stream.getTracks().forEach(e => {
                 if (e.kind === 'video'){e.enabled = false;socket.emit("audio/video", {room,video:"unmute"});}
             });
-        } else if(obj.myVideo && !obj.get){
+        } else if(myVideo){console.log("mute");
             stream.getTracks().forEach(e => {
+                if (e.kind === 'audio'){e.enabled =false;}
                 if (e.kind === 'video'){e.enabled = true;socket.emit("audio/video", {room,video:"mute"});} 
             });
         }
@@ -153,12 +145,16 @@ export default function AllVideos(props){
         }
     },[hideVideos]);
 
-    useEffect(() => {console.log("audioaufruf");
-        getVideo({audio:audio, get: true});
+    useEffect(() => {
+        if(audio){
+            socket.emit("audio/video", {room,audio:"mute"});
+        } else {
+            socket.emit("audio/video", {room, audio:"unmute"});
+        }
     },[audio]);
 
-    useEffect(() => {console.log("videoaufruf");
-        getVideo({myVideo:myVideo, get: false});
+    useEffect(() => {
+        getVideo();
     },[myVideo]);    
 
     return(

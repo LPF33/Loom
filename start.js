@@ -235,12 +235,12 @@ io.on("connection", async(socket) =>{
         const allUsers = await database.getChatUsers(room);
         io.to(room).emit("useronline", {user:allUsers.rows});     
         socket.to(room).emit("startP2P", socket.id); 
+        /*
         for (let item in io.sockets.sockets){
             if(item !== socket.id){
                 socket.emit("startP2P", item); 
             }            
-        }
-        
+        }*/        
     });  
 
     socket.on("chatMessage", async (data) => {     
