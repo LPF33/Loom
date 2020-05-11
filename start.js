@@ -237,7 +237,7 @@ io.on("connection", async(socket) =>{
         socket.to(room).emit("startP2P", socket.id); 
         for (let item in io.sockets.sockets){
             if(item !== socket.id){
-                io.sockets.sockets[socket.id].emit("startP2P", item); 
+                socket.emit("startP2P", item); 
             }            
         }
         
