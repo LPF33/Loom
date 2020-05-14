@@ -16,7 +16,7 @@ Until now it is only possible to have a videochat with 2 people.
 
 - Whiteboard-tools: pencil, rectangle, circle, rubber, clear Canvas, set a drawing color, set backgroundcolor, set width/height, download image
 
-- Background-Canvas : Stars appear randomly, stars connect to mouse, more stars light when mouse moves
+- Background-Canvas : Stars appear randomly, stars connect to mouse, more stars shine on when mouse moves
 
 Still missing: Game LOOMactica!
 
