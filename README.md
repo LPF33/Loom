@@ -12,7 +12,11 @@ You can of course see who is online, can switch on/off the camera, mute your mic
 P2P-Communication with WebRTC and Signaling with socket.IO .
 Until now it is only possible to have a videochat with 2 people.
 
-Whiteboard-tools: pencil, rectangle, circle, rubber, clear Canvas, set a drawing color, set backgroundcolor, set width/height, download image
+- WebRTC: P2P, Video/Audio mute, STUN Server (loom/src/VideoApp.js)
+
+- Whiteboard-tools: pencil, rectangle, circle, rubber, clear Canvas, set a drawing color, set backgroundcolor, set width/height, download image
+
+- Background-Canvas : Stars appear randomly, stars connect to mouse, more stars light when mouse moves
 
 Still missing: Game LOOMactica!
 
