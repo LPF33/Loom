@@ -72,14 +72,14 @@ export default function canvas(canvas,room){
     let startPointX;
     let startPointY;
 
-    const paintStart = e => {    
+    const paintStart = e => {   
         painting = true;
         startPointX = e.offsetX;
-        startPointY = e.offsetY;      console.log(startPointX);
+        startPointY = e.offsetY; 
     };
     const paintStartT = e => {    
         painting = true;
-        startPointX = e.touches[0].clientX;console.log(startPointX, e.targetTouches[0].pageX);
+        startPointX = e.touches[0].clientX;
         startPointY = e.touches[0].clientY;      
     };
 
@@ -230,10 +230,10 @@ export default function canvas(canvas,room){
         ctx.clearRect(0,0,canvas.width,canvas.height);         
     });
 
-    pencil.addEventListener("click", drawPencil);
-    rectangle.addEventListener("click", drawRectangle);
-    circle.addEventListener("click", drawCircle);
-    rubber.addEventListener("click", erase);
+    pencil.addEventListener("click", drawPencil, {passive:true});
+    rectangle.addEventListener("click", drawRectangle, {passive:true});
+    circle.addEventListener("click", drawCircle, {passive:true});
+    rubber.addEventListener("click", erase, {passive:true});
 
     const downloadFile = () => {
         download.download="loomchat";
