@@ -89,9 +89,10 @@ h5 {
     position: absolute;
     bottom: calc(5vh - 1.5vw);
     left: 20px;
-    background-image: url("./pics/hamburgermenu.svg");
+    background-image: url("./pics/friends.png");
     background-size: 3vw;
     background-position: center;
+    background-repeat: no-repeat;
     width: 3vw;
     height: 3vw;
     outline: none;

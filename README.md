@@ -8,19 +8,22 @@ This project is not finished yet!
 Invite your friends to join a meeting. 
 Features: Videochat, Chat, Whiteboard!
 You can send an invitation email to your friend for this chatroom, or just send the link to this chat session.
-You can of course see who is online, can switch on/off the Camera, mute your microphone, draw or paint on the Whiteboard. 
+You can of course see who is online, can switch on/off the camera, mute your microphone, draw or paint on the Whiteboard. 
 P2P-Communication with WebRTC and Signaling with socket.IO .
+Until now it is only possible to have a videochat with 2 people.
 
-Still missing: Audio, LOOMactica, mayba some more Whiteboard tools!
+Whiteboard-tools: pencil, rectangle, circle, rubber, clear Canvas, set a drawing color, set backgroundcolor, set width/height, download image
+
+Still missing: Game LOOMactica!
 
 ## PREVIEW
 ![](Loom.gif)
 
 ## Tech Stack:
 - React + Redux
+- WebRTC
 - Node.js
 - Socket.io
-- WebRTC
 - Express
 - PostgreSQL
 - Cookie-Session

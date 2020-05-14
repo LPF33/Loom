@@ -64,7 +64,7 @@ export default function AllVideos(props){
         socket.emit('video', {socketId,desc});
     };
     
-    socket.on("video", async (data) => { 
+    socket.on("video", async (data) => { console.log(data);
         if (data.desc && data.desc.type === "answer") {
             const desc = new RTCSessionDescription(data.desc);
             await localPeerConnection.setRemoteDescription(desc); 
@@ -84,7 +84,7 @@ export default function AllVideos(props){
         }
     });
 
-    localPeerConnection.addEventListener('icecandidate', event => {
+    localPeerConnection.addEventListener('icecandidate', event => {console.log("event", event);
         if (event.candidate) {
             socket.emit('new-ice-candidate', {room, candidate:{'new-ice-candidate':event.candidate}});
         }
@@ -159,7 +159,7 @@ export default function AllVideos(props){
     return(
         <div id="usersVideo">
             <div className={classVideo}>
-                <video onClick={() => {if(enlarge[0]){setEnlarge(["",""]);}else{setEnlarge(["enlarge",""]);}}} id="chatMyVideo" muted="true" className={`userVideos ${enlarge[0]}`} ref={videoElement} autoPlay></video>
+                <video onClick={() => {if(enlarge[0]){setEnlarge(["",""]);}else{setEnlarge(["enlarge",""]);}}} id="chatMyVideo" muted={true} className={`userVideos ${enlarge[0]}`} ref={videoElement} autoPlay></video>
                 <video onClick={() => {if(enlarge[1]){setEnlarge(["",""]);}else{setEnlarge(["","enlarge"]);}}} className={`userVideos ${enlarge[1]}`} ref={videoElement2} autoPlay></video>
             </div>
         </div>

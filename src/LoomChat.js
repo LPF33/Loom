@@ -95,7 +95,7 @@ export default function LoomChat(props){
                     {status===1 &&
                         <div className="flexColumn">
                             <input type="text" id="firstname" name="firstname" placeholder="Your firstname" value={firstname} onChange={e => setFirstName(e.target.value)}/> 
-                            <input type="text" id="lastname" name="lastname" placeholder="Your lastname" value={lastname} onChange={e => setLastName(e.target.value)}/>  
+                            <input type="text" id="lastname" name="lastname" placeholder="Your lastname" onKeyDown={e => {if(e.key === "Enter"){sendUserData();}}} value={lastname} onChange={e => setLastName(e.target.value)}/>  
                             <input type="submit" value="Join" onClick={sendUserData}></input>
                         </div>
                     }
