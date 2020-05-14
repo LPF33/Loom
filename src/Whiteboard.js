@@ -5,7 +5,7 @@ import "./Whiteboard.css";
 
 export default function Whiteboard(props){
 
-    const {room} = props;
+    const {room, canvasVisible} = props;
     const WhiteboardRef = useRef(); 
     const [explain, setExplain] = useState(false);
     const [explainB, setExplainB] = useState(false);
@@ -27,7 +27,7 @@ export default function Whiteboard(props){
     },[rgb]);
 
     return(
-        <div id="Whiteboard">
+        <div className={canvasVisible}>
             <div id="WhiteboardDiv">
                 <canvas ref={WhiteboardRef} id="WhiteboardCanvas"></canvas>
             </div>            

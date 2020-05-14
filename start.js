@@ -267,7 +267,7 @@ io.on("connection", async(socket) =>{
 
     socket.on("getPainting", async(room)=> { 
         const whiteboard = await database.getWhiteboard(room);
-        io.to(room).emit("painting", whiteboard.rows[0]);  
+        socket.emit("painting", whiteboard.rows[0]);  
     });    
 
     socket.on("painting", async(data) => { 

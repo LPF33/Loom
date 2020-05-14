@@ -1,8 +1,16 @@
-#Whiteboard {
+.Whiteboard {
+    transition: 0.5s bottom;
     position: absolute;
     bottom: 15vh;
     right: 10vw;
     z-index:3;
+}
+
+.noWhiteboard {
+    transition: 0.5s bottom;
+    position: absolute;
+    bottom: -100vh;
+    right: 10vw;
 }
 
 #WhiteboardCanvas {

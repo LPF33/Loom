@@ -21,8 +21,8 @@ export default function LoomChat(props){
     const [lastname, setLastName] = useState("");
     const [status, setStatus] = useState(1);
     const [error, setError] = useState("");
-    const [canvasVisible,setCanvasVisible] = useState(false);
-    const [chatVisible,setChatVisible] = useState(false);
+    const [canvasVisible,setCanvasVisible] = useState("noWhiteboard");
+    const [chatVisible,setChatVisible] = useState("chatnotvisible");
     const [allVideosVisible,setallVideosVisible] = useState(true);
     const [mute, setMute] = useState(true);
     const [myVideo, setMyVideo] = useState(true);
@@ -82,7 +82,7 @@ export default function LoomChat(props){
     },[allVideosVisible]);
 
     return(
-        <div>            
+        <div >            
             {!user && 
             <div>        
                 <div id="header">LOOM</div> 
@@ -117,12 +117,12 @@ export default function LoomChat(props){
             </div>
             }
             {user && 
-            <div>
+            <div id="mainLoomChat">
                 <AllVideos room={room}/>
 
-                {chatVisible && <Chat user={user} room={room}/>}
+                <Chat user={user} room={room} chatVisible={chatVisible}/>
 
-                {canvasVisible && <Whiteboard room={room}/>}   
+                <Whiteboard room={room} canvasVisible={canvasVisible}/>  
 
                 {userOnline && <ShowUsers userId={user.id}/>}
 
@@ -133,10 +133,10 @@ export default function LoomChat(props){
                     {userOnline && <div id="onlineX" onClick={()=>setUserOnline(false)}>X</div>}           
                     <h1>LOOM Chat</h1>
                     <button className="chatButton" type="button"onClick={()=> {
-                        if(chatVisible){
-                            setChatVisible(false);
+                        if(chatVisible === "chatnotvisible"){
+                            setChatVisible("chatisvisible");
                         }else {
-                            setChatVisible(true);
+                            setChatVisible("chatnotvisible");
                         }
                     }}>Chat</button>
                     <div>
@@ -148,10 +148,10 @@ export default function LoomChat(props){
                     {allVideosVisible && <button className="chatButton" type="button" onClick={()=> setallVideosVisible(false)}>Hide Videos</button>}
                     {!allVideosVisible && <button className="chatButtonred" type="button" onClick={()=> setallVideosVisible(true)}>Show Videos</button>}
                     <button className="chatButton" type="button" onClick={()=> {
-                        if(canvasVisible){
-                            setCanvasVisible(false);
+                        if(canvasVisible === "Whiteboard"){
+                            setCanvasVisible("noWhiteboard");
                         }else {
-                            setCanvasVisible(true);
+                            setCanvasVisible("Whiteboard");
                         }
                     }}>Whiteboard</button>
                     <h2>Hello, {user.firstname}!</h2>

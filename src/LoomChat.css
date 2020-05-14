@@ -6,6 +6,13 @@
     box-sizing: border-box;
 }
 
+#mainLoomChat{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
 #welcomeCanvas {
     position: fixed;
     top:0;
@@ -54,6 +61,7 @@ h5 {
     background-color: white;
     width: 100%;
     height: 10vh;
+    z-index:4;
 }
 
 #noChatUser{
@@ -77,12 +85,23 @@ h5 {
 }
 
 #LoomChat {
-    position: absolute;
-    bottom: 15vh;
-    left: 10vw;
     width: 20vw;
     height: 60vh;
     background-color: white;
+}
+
+.chatnotvisible{
+    position: absolute;
+    left: 10vw;
+    transition: 0.5s bottom;
+    bottom: -100vh;
+}
+
+.chatisvisible{
+    position: absolute;
+    left: 10vw;
+    transition: 0.5s bottom;
+    bottom: 15vh;
 }
 
 #online{
@@ -330,6 +349,3 @@ h5 {
         left: -50%;
     }
 }
-
-
-

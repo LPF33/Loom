@@ -7,7 +7,7 @@ import {socket} from "./sockets.js";
 export default function Chat(props){
 
     const {firstname,lastname} = props.user;
-    const {room} = props;
+    const {room, chatVisible} = props;
 
     const [messagedraft, setmessagedraft] = useState("");
     const elemRef = useRef();    
@@ -28,7 +28,7 @@ export default function Chat(props){
     }
 
     return(
-        <div id="LoomChat">
+        <div id="LoomChat" className={chatVisible}>
             <div className="chatOutput" ref={elemRef}>
                 {messages && 
                     messages.map((message,index) => 

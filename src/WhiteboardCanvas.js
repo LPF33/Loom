@@ -52,9 +52,11 @@ export default function canvas(canvas,room){
     });
 
     //Set background color
+    let backgroundColor = "white";
     ctx.fillStyle = "white";
     ctx.fillRect(0,0,canvas.width,canvas.height);
     background.addEventListener("click", () => { 
+        backgroundColor = color;
         ctx.fillStyle = color;
         ctx.fillRect(0,0,canvas.width,canvas.height);
     });
@@ -73,12 +75,12 @@ export default function canvas(canvas,room){
     const paintStart = e => {    
         painting = true;
         startPointX = e.offsetX;
-        startPointY = e.offsetY;      
+        startPointY = e.offsetY;      console.log(startPointX);
     };
     const paintStartT = e => {    
         painting = true;
-        startPointX = e.targetTouches[0].pageX;
-        startPointY = e.targetTouches[0].pageY;      
+        startPointX = e.touches[0].clientX;console.log(startPointX, e.targetTouches[0].pageX);
+        startPointY = e.touches[0].clientY;      
     };
 
     const paintEnd = e => {
@@ -97,17 +99,19 @@ export default function canvas(canvas,room){
 
         if(painting){
             ctx.beginPath();
-            ctx.strokeStyle = "white";
-            ctx.fillStyle = "white";
+            ctx.strokeStyle = backgroundColor;
+            ctx.fillStyle = backgroundColor;
             ctx.arc(startPointX, startPointY, 10, 0, Math.PI*2, false);
             ctx.fill();
             ctx.stroke();
-            ctx.closePath();            
+            ctx.closePath();  
+            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX;
+            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY;          
         }
         canvas.removeEventListener("mousemove", erase); 
-        canvas.addEventListener("mousemove", erase);   
+        canvas.addEventListener("mousemove", erase);  
         canvas.removeEventListener("touchmove", erase); 
-        canvas.addEventListener("touchmove", erase, {passive: true});     
+        canvas.addEventListener("touchmove", erase, {passive: true});  
     };
 
     //Paint with a pencil, paint a stroke
@@ -157,8 +161,9 @@ export default function canvas(canvas,room){
         if(painting){      
             rectanglePaint = true;             
             ctx.strokeStyle = color;
+            
             rectangleEndX = e.offsetX ? e.offsetX-startPointX : e.targetTouches[0].pageX-startPointX;
-            rectangleEndY = e.offsetY ? e.offsetX-startPointY : e.targetTouches[0].pageY-startPointY;
+            rectangleEndY = e.offsetY ? e.offsetY-startPointY : e.targetTouches[0].pageY-startPointY;
             ctx.strokeRect(startPointX,startPointY,rectangleEndX,rectangleEndY);            
             
             //Emit data
@@ -225,8 +230,6 @@ export default function canvas(canvas,room){
         ctx.clearRect(0,0,canvas.width,canvas.height);         
     });
 
-    socket.emit("getPainting", room);
-
     pencil.addEventListener("click", drawPencil);
     rectangle.addEventListener("click", drawRectangle);
     circle.addEventListener("click", drawCircle);
@@ -240,8 +243,11 @@ export default function canvas(canvas,room){
 
     download.addEventListener("click",downloadFile);
 
+    socket.emit("getPainting", room);
+
     canvas.addEventListener("mousedown", paintStart);
     canvas.addEventListener("mouseup", paintEnd);
+    
     canvas.addEventListener("touchstart", paintStartT, {passive:true});
     canvas.addEventListener("touchend", paintEnd, {passive:true});
 }
