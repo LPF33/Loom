@@ -80,7 +80,7 @@ export default function canvas(canvas,room){
     const paintStartT = e => {    
         painting = true;
         startPointX = e.touches[0].pageX-e.target.offsetParent.offsetLeft;
-        startPointY = e.touches[0].pageY-e.target.offsetParent.offsetTop;     console.log(e, startPointX,startPointY); 
+        startPointY = e.touches[0].pageY-e.target.offsetParent.offsetTop; 
     };
 
     const paintEnd = e => {
