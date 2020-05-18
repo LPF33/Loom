@@ -25,7 +25,23 @@ export default function canvas(canvas,room){
     const download = document.querySelector("#download");
     const widhtInput = document.querySelector("#inputWidth");
     const heightInput = document.querySelector("#inputHeight"); 
-    const setColor = document.querySelector("#setColor");  
+    const setColor = document.querySelector("#setColor"); 
+    const scrollButton = document.querySelector("#scroll"); 
+
+    //Enable/Disable scroll when touchEvents
+    const disableScroll = e => {
+        e.preventDefault();
+    };
+
+    const scrollTouch = () => {
+        canvas.removeEventListener("touchmove", disableScroll, {passive: false});
+        canvas.removeEventListener("touchmove", drawCircle);
+        canvas.removeEventListener("touchmove", drawRectangle); 
+        canvas.removeEventListener("touchmove", drawPencil);
+        canvas.removeEventListener("touchmove", erase);
+    };
+
+    scrollButton.addEventListener("touchstart", scrollTouch, {passive: true});
 
     //Set Size of canvas
     widhtInput.addEventListener("change", e=> {
@@ -78,9 +94,10 @@ export default function canvas(canvas,room){
         startPointY = e.offsetY; 
     };
     const paintStartT = e => {    
+        scrollButton.style.display = "inline-block";
         painting = true;
-        startPointX = e.touches[0].pageX-e.target.offsetParent.offsetLeft;
-        startPointY = e.touches[0].pageY-e.target.offsetParent.offsetTop; 
+        startPointX = e.touches[0].pageX-e.target.offsetParent.offsetLeft+e.target.parentNode.scrollLeft;
+        startPointY = e.touches[0].pageY-e.target.offsetParent.offsetTop+e.target.parentNode.scrollTop; 
     };
 
     const paintEnd = e => {
@@ -89,7 +106,10 @@ export default function canvas(canvas,room){
     };
     
     //rubber
-    const erase = e => {
+    const erase = (e,num=0) => {
+        if(num){ 
+            canvas.addEventListener("touchmove", disableScroll, {passive: false});
+        }
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", drawPencil);
@@ -105,8 +125,8 @@ export default function canvas(canvas,room){
             ctx.fill();
             ctx.stroke();
             ctx.closePath();  
-            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft;
-            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop;          
+            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft+e.target.parentNode.scrollLeft;
+            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop+e.target.parentNode.scrollTop;          
         }
         canvas.removeEventListener("mousemove", erase); 
         canvas.addEventListener("mousemove", erase);  
@@ -115,7 +135,10 @@ export default function canvas(canvas,room){
     };
 
     //Paint with a pencil, paint a stroke
-    const drawPencil = e => {  
+    const drawPencil = (e,num=0) => {  
+        if(num){ 
+            canvas.addEventListener("touchmove", disableScroll, {passive: false});
+        }
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", erase);
@@ -126,11 +149,11 @@ export default function canvas(canvas,room){
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(startPointX,startPointY);
-            e.offsetX ? ctx.lineTo(e.offsetX,e.offsetY) : ctx.lineTo(e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft,e.targetTouches[0].pageY-e.target.offsetParent.offsetTop);            
+            e.offsetX ? ctx.lineTo(e.offsetX,e.offsetY) : ctx.lineTo(e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft+e.target.parentNode.scrollLeft,e.targetTouches[0].pageY-e.target.offsetParent.offsetTop+e.target.parentNode.scrollTop);            
             ctx.stroke(); 
             ctx.closePath();   
-            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft;
-            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop;
+            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft+e.target.parentNode.scrollLeft;
+            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop+e.target.parentNode.scrollTop;
             
             //Emit data
             socket.emit("painting", {
@@ -148,7 +171,10 @@ export default function canvas(canvas,room){
     let rectangleEndY; 
 
     //draw a rectangle
-    const drawRectangle = e => {
+    const drawRectangle = (e,num=0) => {
+        if(num){ 
+            canvas.addEventListener("touchmove", disableScroll, {passive: false});
+        }
         canvas.removeEventListener("mousemove", drawCircle);
         canvas.removeEventListener("mousemove", drawPencil);       
         canvas.removeEventListener("mousemove", erase);
@@ -162,8 +188,8 @@ export default function canvas(canvas,room){
             rectanglePaint = true;             
             ctx.strokeStyle = color;
             
-            rectangleEndX = e.offsetX ? e.offsetX-startPointX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft-startPointX;
-            rectangleEndY = e.offsetY ? e.offsetY-startPointY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop-startPointY;
+            rectangleEndX = e.offsetX ? e.offsetX-startPointX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft-startPointX+e.target.parentNode.scrollLeft;
+            rectangleEndY = e.offsetY ? e.offsetY-startPointY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop-startPointY+e.target.parentNode.scrollTop;
             ctx.strokeRect(startPointX,startPointY,rectangleEndX,rectangleEndY);            
             
             //Emit data
@@ -179,7 +205,10 @@ export default function canvas(canvas,room){
     };
 
     //Draw a circle
-    const drawCircle = e => { 
+    const drawCircle = (e,num=0) => { 
+        if(num){ 
+            canvas.addEventListener("touchmove", disableScroll, {passive: false});
+        }
         canvas.removeEventListener("mousemove", drawRectangle); 
         canvas.removeEventListener("mousemove", drawPencil);       
         canvas.removeEventListener("mousemove", erase);
@@ -191,8 +220,8 @@ export default function canvas(canvas,room){
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.fillStyle = color;
-            let circleX = e.offsetX ? Math.pow(e.offsetX-startPointX,2) : Math.pow(e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft-startPointX,2);
-            let circleY = e.offsetY ? Math.pow(e.offsetY-startPointY,2) : Math.pow(e.targetTouches[0].pageY-e.target.offsetParent.offsetTop-startPointY,2);
+            let circleX = e.offsetX ? Math.pow(e.offsetX-startPointX,2) : Math.pow(e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft-startPointX+e.target.parentNode.scrollLeft,2);
+            let circleY = e.offsetY ? Math.pow(e.offsetY-startPointY,2) : Math.pow(e.targetTouches[0].pageY-e.target.offsetParent.offsetTop-startPointY+e.target.parentNode.scrollTop,2);
             let line = Math.sqrt(circleX+circleY); 
             ctx.arc(startPointX, startPointY, line, 0, Math.PI*2, false);
             ctx.fill();
@@ -211,7 +240,7 @@ export default function canvas(canvas,room){
         canvas.addEventListener("touchmove", drawCircle, {passive: true});
     };
 
-    socket.on("painting", data => { console.log(data);
+    socket.on("painting", data => { 
         if(data && (data.width || data.height)){
             ctx.canvas.width = data.width;
             ctx.canvas.height = data.height;
@@ -230,10 +259,10 @@ export default function canvas(canvas,room){
         ctx.clearRect(0,0,canvas.width,canvas.height);         
     });
 
-    pencil.addEventListener("click", drawPencil, {passive:true});
-    rectangle.addEventListener("click", drawRectangle, {passive:true});
-    circle.addEventListener("click", drawCircle, {passive:true});
-    rubber.addEventListener("click", erase, {passive:true});
+    pencil.addEventListener("click", e => drawPencil(e,1));
+    rectangle.addEventListener("click", e => drawRectangle(e,1));
+    circle.addEventListener("click", e => drawCircle(e,1));
+    rubber.addEventListener("click", e => erase(e,1));
 
     const downloadFile = () => {
         download.download="loomchat";
@@ -249,6 +278,5 @@ export default function canvas(canvas,room){
     canvas.addEventListener("mouseup", paintEnd);
     
     canvas.addEventListener("touchstart", paintStartT, {passive:true});
-    canvas.addEventListener("touchend", paintEnd, {passive:true});
-    canvas.addEventListener("touchmove", e => e.preventDefault(), false);
+    canvas.addEventListener("touchend", paintEnd, {passive:true});    
 }

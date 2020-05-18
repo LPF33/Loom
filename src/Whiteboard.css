@@ -120,3 +120,7 @@
     background-color: rgb(122,122,122);
     margin-left: 10px;
 }
+
+#scroll{
+    display: none;
+}

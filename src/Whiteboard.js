@@ -45,6 +45,7 @@ export default function Whiteboard(props){
                 {explainB && <div className="explainSizeCanvas">Caution: Set the backgroundcolor before painting!</div>}        
                 {explainW && <div className="explainSizeCanvas">Initial Width/Height: 1000px/600px</div>}
                 <a id="download" className="tool" onMouseOver={()=> setExplain(true)} onMouseLeave={()=> setExplain(false)}>Download</a>
+                <button type="button" id="scroll" className="tool">click &amp; Scroll</button>
                 <div>
                     <button type="button" className="color" id="yellow"></button>
                     <button type="button" className="color" id="blue"></button>
