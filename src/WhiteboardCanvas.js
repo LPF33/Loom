@@ -79,8 +79,8 @@ export default function canvas(canvas,room){
     };
     const paintStartT = e => {    
         painting = true;
-        startPointX = e.touches[0].clientX;
-        startPointY = e.touches[0].clientY;      
+        startPointX = e.touches[0].pageX-e.target.offsetParent.offsetLeft;
+        startPointY = e.touches[0].pageY-e.target.offsetParent.offsetTop;     console.log(e, startPointX,startPointY); 
     };
 
     const paintEnd = e => {
@@ -105,8 +105,8 @@ export default function canvas(canvas,room){
             ctx.fill();
             ctx.stroke();
             ctx.closePath();  
-            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX;
-            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY;          
+            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft;
+            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop;          
         }
         canvas.removeEventListener("mousemove", erase); 
         canvas.addEventListener("mousemove", erase);  
@@ -126,11 +126,11 @@ export default function canvas(canvas,room){
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(startPointX,startPointY);
-            e.offsetX ? ctx.lineTo(e.offsetX,e.offsetY) : ctx.lineTo(e.targetTouches[0].pageX,e.targetTouches[0].pageY);            
+            e.offsetX ? ctx.lineTo(e.offsetX,e.offsetY) : ctx.lineTo(e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft,e.targetTouches[0].pageY-e.target.offsetParent.offsetTop);            
             ctx.stroke(); 
             ctx.closePath();   
-            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX;
-            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY;
+            startPointX = e.offsetX ? e.offsetX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft;
+            startPointY = e.offsetY ? e.offsetY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop;
             
             //Emit data
             socket.emit("painting", {
@@ -162,8 +162,8 @@ export default function canvas(canvas,room){
             rectanglePaint = true;             
             ctx.strokeStyle = color;
             
-            rectangleEndX = e.offsetX ? e.offsetX-startPointX : e.targetTouches[0].pageX-startPointX;
-            rectangleEndY = e.offsetY ? e.offsetY-startPointY : e.targetTouches[0].pageY-startPointY;
+            rectangleEndX = e.offsetX ? e.offsetX-startPointX : e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft-startPointX;
+            rectangleEndY = e.offsetY ? e.offsetY-startPointY : e.targetTouches[0].pageY-e.target.offsetParent.offsetTop-startPointY;
             ctx.strokeRect(startPointX,startPointY,rectangleEndX,rectangleEndY);            
             
             //Emit data
@@ -191,8 +191,8 @@ export default function canvas(canvas,room){
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.fillStyle = color;
-            let circleX = e.offsetX ? Math.pow(e.offsetX-startPointX,2) : Math.pow(e.targetTouches[0].pageX-startPointX,2);
-            let circleY = e.offsetY ? Math.pow(e.offsetY-startPointY,2) : Math.pow(e.targetTouches[0].pageY-startPointY,2);
+            let circleX = e.offsetX ? Math.pow(e.offsetX-startPointX,2) : Math.pow(e.targetTouches[0].pageX-e.target.offsetParent.offsetLeft-startPointX,2);
+            let circleY = e.offsetY ? Math.pow(e.offsetY-startPointY,2) : Math.pow(e.targetTouches[0].pageY-e.target.offsetParent.offsetTop-startPointY,2);
             let line = Math.sqrt(circleX+circleY); 
             ctx.arc(startPointX, startPointY, line, 0, Math.PI*2, false);
             ctx.fill();
@@ -250,4 +250,5 @@ export default function canvas(canvas,room){
     
     canvas.addEventListener("touchstart", paintStartT, {passive:true});
     canvas.addEventListener("touchend", paintEnd, {passive:true});
+    canvas.addEventListener("touchmove", e => e.preventDefault(), false);
 }
