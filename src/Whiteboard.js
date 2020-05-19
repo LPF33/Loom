@@ -11,6 +11,7 @@ export default function Whiteboard(props){
     const [explainB, setExplainB] = useState(false);
     const [explainC, setExplainC] = useState(false);
     const [explainW, setExplainW] = useState(false);
+    const [explainS, setExplainS] = useState(false);
     
     const [moreColor, setmoreColor] = useState(false);
     const [rgb, setRGB] = useState({red:0,green:0,blue:0});
@@ -44,8 +45,9 @@ export default function Whiteboard(props){
                 {explainC && <div className="explainSizeCanvas">Will clear the whiteboard and delete the painting!</div>} 
                 {explainB && <div className="explainSizeCanvas">Caution: Set the backgroundcolor before painting!</div>}        
                 {explainW && <div className="explainSizeCanvas">Initial Width/Height: 1000px/600px</div>}
+                {explainS && <div className="explainSizeCanvas">Click this button and activate scrolling. Click on a tool to deactivate.</div>}
                 <a id="download" className="tool" onMouseOver={()=> setExplain(true)} onMouseLeave={()=> setExplain(false)}>Download</a>
-                <button type="button" id="scroll" className="tool">click &amp; Scroll</button>
+                <button onMouseOver={()=> setExplainS(true)} onMouseLeave={()=> setExplainS(false)} type="button" id="scroll" className="tool"></button>
                 <div>
                     <button type="button" className="color" id="yellow"></button>
                     <button type="button" className="color" id="blue"></button>
