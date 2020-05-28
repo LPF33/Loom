@@ -16,7 +16,14 @@ export default function(props){
 
     useEffect(()=> {
         const param = props.match.params.roomnumber;
-        setRoom(param);          
+        setRoom(param);  
+        (async() => {
+            const userData = await axios.get(`${serverUrl}/getLoomacticaUser/${param}`);
+            setUser(userData.data.user); 
+            if(userData.data.user){
+                socket.emit("playeronline", param);
+            }            
+        })();        
     },[props.match]);
 
     const sendUserData = () => {
@@ -27,13 +34,7 @@ export default function(props){
             } else {
                 const check = await axios.post(`${serverUrl}/startLoomactica`, {name,room});
                 if(check.data.success){
-                    (async() => {
-                        const userData = await axios.get(`${serverUrl}/getLoomacticaUser/${room}`);
-                        setUser(userData.data.user); 
-                        if(userData.data.user){
-                            socket.emit("useronline", room);
-                        }            
-                    })();
+                    window.location.replace(`/loomactica/${room}`);
                 } else {
                     setStatus(2);
                     setError(check.data.error);
@@ -75,6 +76,11 @@ export default function(props){
                     </div>                    
                     }                     
                 </div>                
+            </div>
+            }
+            {user &&
+            <div>
+                Classic
             </div>
             }
         </div>

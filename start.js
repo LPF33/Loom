@@ -346,6 +346,13 @@ io.on("connection", async(socket) =>{
         io.to(room).emit("useronline", {user:allUsers.rows});
     });
 
+
+    //Loomactica
+    socket.on("playeronline", async(room) => { 
+        socket.join(room);
+        console.log(socket.id);       
+    });
+
 });
 
 server.listen(process.env.PORT || 8080);
