@@ -198,6 +198,56 @@ app.post("/chatlogout", async(request, response) => {
     });
 });
 
+app.get("/checkLoomacticaSize/:room", async(request, response) => {
+    const {room} = request.params;
+    const count = await database.loomacticaPlayers(room);
+    const roomSize = count.rows[0].count; 
+
+    if(roomSize>1){
+        response.json({
+            exceeded:true
+        });
+    } else {
+        response.json({
+            exceeded:false
+        });
+    }    
+});
+
+app.post("/startLoomactica", async(request, response) => { 
+    const {name,room} = request.body;
+    if(!name){
+        response.json({
+            success: false,
+            error: "Please insert any name or nickname"
+        });
+    } else {
+        const userId = await database.insertLoomacticaPlayer(name,room);
+        request.session.userId = userId.rows[0].id; 
+        request.session.room = room; 
+        response.json({
+            success: true
+        });
+    }
+    
+});
+
+app.get("/getLoomacticaUser/:room", async(request, response) => {
+    const {room} = request.params;
+    const check = room === request.session.room;
+    if(!request.session.userId || !check){
+        response.json({
+            user: false
+        });
+    } else {
+        const userId = request.session.userId;
+        const userdata = await database.getPlayer(userId); 
+        response.json({
+            user: userdata.rows[0]
+        });
+    }
+});
+
 app.get("*", function(request, response) {
     response.sendFile(__dirname + '/build/index.html');    
 });

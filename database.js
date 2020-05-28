@@ -69,3 +69,18 @@ exports.roomMembers = room => {
     return db.query('SELECT COUNT(id) FROM loomchat WHERE room=$1;',
         [room]);
 };
+
+exports.insertLoomacticaPlayer = (name,room) => {
+    return db.query('INSERT INTO loomactica (nickname,room) VALUES ($1,$2) RETURNING id;',
+        [name,room]);
+};
+
+exports.loomacticaPlayers = room => {
+    return db.query('SELECT COUNT(id) FROM loomchat WHERE room=$1;',
+        [room]);
+};
+
+exports.getPlayer = userId => {
+    return db.query('SELECT * FROM loomactica WHERE id=$1;',
+        [userId]);
+}

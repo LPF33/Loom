@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS loomactica;
+
+CREATE TABLE loomactica (
+    id SERIAL PRIMARY KEY,
+    room VARCHAR NOT NULL,
+    nickname VARCHAR(200) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

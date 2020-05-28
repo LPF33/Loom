@@ -5,6 +5,7 @@ import './index.css';
 import WelcomePage from "./WelcomePage";
 import {BrowserRouter, Route, Redirect, Switch} from "react-router-dom";
 import LoomChat from "./LoomChat.js";
+import Loomactica from "./Loomactica.js";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -31,6 +32,16 @@ ReactDOM.render(
                     exact path = "/loomChat/:roomnumber"
                     render={props => (
                         <LoomChat
+                            key={props.match.url}
+                            match={props.match}
+                            history={props.history}
+                        />
+                    )}
+                />
+                <Route
+                    exact path = "/loomactica/:roomnumber"
+                    render={props => (
+                        <Loomactica
                             key={props.match.url}
                             match={props.match}
                             history={props.history}
