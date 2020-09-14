@@ -1,6 +1,9 @@
 {
   "name": "loom",
   "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
   "main": "start.js",
   "private": true,
   "dependencies": {
